@@ -2,18 +2,31 @@
   <div class="p-10">
     <h1>Income Capitalization</h1>
     <div class="flex mb-4">
-      <div class="flex">
+      <div class="flex flex-col mr-2">
         <div>ค่าเช่าต่อเดือน</div>
-        <input type="text" class="bg-gray-100 mx-3 text-right" placeholder="ค่าเช่าต่อเดือน" v-model="rentPerMonth">
+        <input type="text" class="bg-gray-100 text-right" placeholder="ค่าเช่าต่อเดือน" v-model="rentPerMonth">
       </div>
-      <div class="flex">
+      <div class="flex flex-col mr-2">
         <div>ค่าใช้จ่ายต่อปี</div>
-        <input type="text" class="bg-gray-100 mx-3 text-right" placeholder="ค่าใช้จ่ายต่อปี" v-model="expensesPerYear">
+        <input type="text" class="bg-gray-100 text-right" placeholder="ค่าใช้จ่ายต่อปี" v-model="expensesPerYear">
       </div>
-      <div class="flex">
+      <div class="flex flex-col mr-2">
         <div>ผลตอบแทน</div>
-        <input type="text" class="bg-gray-100 mx-3 text-right" placeholder="ผลตอบแทน" v-model="capitalisationRate">
-        <div>%</div>
+        <input type="text" class="bg-gray-100 text-right" placeholder="ผลตอบแทน" v-model="capitalisationRate">
+      </div>
+      <div class="flex flex-col mr-2">
+        <div>ผ่อนธนาคารต่อเดือน</div>
+        <input type="text" class="bg-gray-100 text-right" placeholder="ผ่อนธนาคารต่อเดือน" v-model="toBankPerMonth">
+      </div>
+      <div class="flex flex-col mr-2">
+        <div>ต้นทุนเพิ่มเติม</div>
+        <input type="text" class="bg-gray-100 text-right" placeholder="ต้นทุนเพิ่มเติม" v-model="additionalPropertyValue">
+        <div class=" text-sm">(ค่าแต่ง เงินจอง เงินดาวน์)</div>
+      </div>
+      <div class="flex flex-col mr-2">
+        <div>ราคาทรัพย์</div>
+        <input type="text" class="bg-gray-100 text-right" placeholder="ต้นทุนเพิ่มเติม" v-model="propertyPrice">
+        <div>Net Rental Yield: {{ netRentalYield }}%</div>
       </div>
     </div>
     <h2>ช่วงค่าเช่า (บาท/เดือน)</h2>
@@ -48,15 +61,22 @@ export default defineComponent({
   name: 'Home',
   components: {},
   setup () {
-    const rentPerMonth = ref(0)
+    const rentPerMonth = ref(6500)
+    const toBankPerMonth = ref(6000)
     const capitalisationRate = ref(5.5)
-    const expensesPerYear = ref(0)
+    const expensesPerYear = ref(12000)
+    const additionalPropertyValue = ref(50000)
+    const propertyPrice = ref(1200000)
+    const netRentalYield = ref(1200000)
+
     let propertyValueByRentRanges = reactive([] as DatasetModel[])
     let propertyValueBycapRate = reactive([] as DatasetModel[])
 
     watch(() => rentPerMonth.value, () => {
       Object.assign(propertyValueByRentRanges, generatePropertyValueDataset('RENT'))
       Object.assign(propertyValueBycapRate, generatePropertyValueDataset('CAP'))
+
+      netRentalYield.value = calNetRentalYield(calRentPerYear(rentPerMonth.value), expensesPerYear.value, additionalPropertyValue.value, propertyPrice.value)
     })
 
     watch(() => capitalisationRate.value, () => {
@@ -104,9 +124,15 @@ export default defineComponent({
     }
 
     const calPropertyValue = (rentPerYear: number, expensesPerYear: number, capitalisationRate: number): number => {
-      console.log('rentPerYear - expensesPerYear', rentPerYear, expensesPerYear)
+      // console.log('rentPerYear - expensesPerYear', rentPerYear, expensesPerYear)
       const v = ((rentPerYear - expensesPerYear) * 100) / capitalisationRate
       return isFinite(v) ? Math.round(v) : 0
+    }
+
+    const calNetRentalYield = (rentPerYear: number, expensesPerYear: number, additionalPropertyValue: number, propertyPrice: number): number => {
+      const v = ((rentPerYear - expensesPerYear) * 100) / (propertyPrice + additionalPropertyValue)
+      // console.log('calNetRentalYield', v)
+      return isFinite(v) ? Number(v.toFixed(2)) : 0
     }
 
     return {
@@ -115,6 +141,10 @@ export default defineComponent({
       expensesPerYear,
       propertyValueByRentRanges,
       propertyValueBycapRate,
+      toBankPerMonth,
+      additionalPropertyValue,
+      propertyPrice,
+      netRentalYield,
     }
   },
   methods: {

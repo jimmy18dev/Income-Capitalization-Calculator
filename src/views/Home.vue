@@ -27,6 +27,9 @@
         <div>ราคาทรัพย์</div>
         <input type="text" class="bg-gray-100 text-right" placeholder="ต้นทุนเพิ่มเติม" v-model="propertyPrice">
         <div>Net Rental Yield: {{ netRentalYield }}%</div>
+        <div>Cash on Cash Rental Yield: {{ cashOnCashRentalYield }}%</div>
+        <div>Cashflow/Month: {{ toBaht(cashflowPerMonth) }}</div>
+        <div>Cashflow/Year: {{ toBaht(cashflowPerYear) }}</div>
       </div>
     </div>
     <h2>ช่วงค่าเช่า (บาท/เดือน)</h2>
@@ -67,7 +70,10 @@ export default defineComponent({
     const expensesPerYear = ref(12000)
     const additionalPropertyValue = ref(50000)
     const propertyPrice = ref(1200000)
-    const netRentalYield = ref(1200000)
+    const netRentalYield = ref(0)
+    const cashOnCashRentalYield = ref(0)
+    const cashflowPerMonth = ref(0)
+    const cashflowPerYear = ref(0)
 
     let propertyValueByRentRanges = reactive([] as DatasetModel[])
     let propertyValueBycapRate = reactive([] as DatasetModel[])
@@ -77,6 +83,11 @@ export default defineComponent({
       Object.assign(propertyValueBycapRate, generatePropertyValueDataset('CAP'))
 
       netRentalYield.value = calNetRentalYield(calRentPerYear(rentPerMonth.value), expensesPerYear.value, additionalPropertyValue.value, propertyPrice.value)
+
+      cashOnCashRentalYield.value = calCashOnCashRentalYield(calRentPerYear(rentPerMonth.value), expensesPerYear.value, toBankPerMonth.value, additionalPropertyValue.value, propertyPrice.value)
+
+      cashflowPerMonth.value = calCashflowPerMonth(rentPerMonth.value, expensesPerYear.value, toBankPerMonth.value)
+      cashflowPerYear.value = cashflowPerMonth.value * 12
     })
 
     watch(() => capitalisationRate.value, () => {
@@ -131,8 +142,18 @@ export default defineComponent({
 
     const calNetRentalYield = (rentPerYear: number, expensesPerYear: number, additionalPropertyValue: number, propertyPrice: number): number => {
       const v = ((rentPerYear - expensesPerYear) * 100) / (propertyPrice + additionalPropertyValue)
-      // console.log('calNetRentalYield', v)
+      // console.log(rentPerYear, expensesPerYear, propertyPrice, additionalPropertyValue, v)
       return isFinite(v) ? Number(v.toFixed(2)) : 0
+    }
+
+    const calCashOnCashRentalYield = (rentPerYear: number, expensesPerYear: number, toBankPerMonth: number, additionalPropertyValue: number, propertyPrice: number): number => {
+      const v = ((rentPerYear - expensesPerYear - (toBankPerMonth * 12)) * 100) / (additionalPropertyValue)
+      return isFinite(v) ? Number(v.toFixed(2)) : 0
+    }
+
+    const calCashflowPerMonth = (rentPerMonth: number, expensesPerYear: number, toBankPerMonth: number): number => {
+      const v = rentPerMonth - toBankPerMonth - (expensesPerYear / 12)
+      return isFinite(v) ? Math.round(v) : 0
     }
 
     return {
@@ -145,6 +166,9 @@ export default defineComponent({
       additionalPropertyValue,
       propertyPrice,
       netRentalYield,
+      cashOnCashRentalYield,
+      cashflowPerMonth,
+      cashflowPerYear,
     }
   },
   methods: {

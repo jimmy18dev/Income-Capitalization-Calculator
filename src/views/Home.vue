@@ -4,15 +4,23 @@
     <div class="flex mb-4">
       <div class="flex flex-col mr-2">
         <div>ค่าเช่าต่อเดือน</div>
-        <input type="text" class="bg-gray-100 text-right" placeholder="ค่าเช่าต่อเดือน" v-model="rentPerMonth">
+        <input type="text" class="bg-gray-100 text-right" placeholder="ค่าเช่าต่อเดือน" v-model="user.rentPerMonth">
+        <input
+          type="tel"
+          v-model="user.rentPerMonth"
+          v-cleave="{
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand'
+          }"
+        >
       </div>
       <div class="flex flex-col mr-2">
         <div>ค่าใช้จ่ายต่อปี</div>
-        <input type="text" class="bg-gray-100 text-right" placeholder="ค่าใช้จ่ายต่อปี" v-model="expensesPerYear">
+        <input type="text" class="bg-gray-100 text-right" placeholder="ค่าใช้จ่ายต่อปี" v-model="user.expensesPerYear">
       </div>
       <div class="flex flex-col mr-2">
         <div>ผลตอบแทน</div>
-        <input type="text" class="bg-gray-100 text-right" placeholder="ผลตอบแทน" v-model="capitalisationRate">
+        <input type="text" class="bg-gray-100 text-right" placeholder="ผลตอบแทน" v-model="user.capitalisationRate">
       </div>
       <div class="flex flex-col mr-2">
         <div>ผ่อนธนาคารต่อเดือน</div>
@@ -59,15 +67,16 @@ import { reactive, onMounted, defineComponent, ref, onBeforeUnmount, computed, w
 import DatasetModel from '../models/dataset'
 import { toBaht, percentages } from '../utils/currency'
 
+import User from '../interface/user'
 
 export default defineComponent({
   name: 'Home',
   components: {},
   setup () {
     const rentPerMonth = ref(6500)
-    const toBankPerMonth = ref(6000)
-    const capitalisationRate = ref(5.5)
     const expensesPerYear = ref(12000)
+    const capitalisationRate = ref(5.5)
+    const toBankPerMonth = ref(6000)
     const additionalPropertyValue = ref(50000)
     const propertyPrice = ref(1200000)
     const netRentalYield = ref(0)
@@ -75,8 +84,19 @@ export default defineComponent({
     const cashflowPerMonth = ref(0)
     const cashflowPerYear = ref(0)
 
+    const user: User = reactive({
+      rentPerMonth: 6500,
+      expensesPerYear: 12000,
+      capitalisationRate: 5.5
+    })
+
     let propertyValueByRentRanges = reactive([] as DatasetModel[])
     let propertyValueBycapRate = reactive([] as DatasetModel[])
+
+    watch(() => user, () => {
+      const propertyValue = calPropertyValue()
+      console.log('calPropertyValue', propertyValue)
+    }, { deep: true })
 
     watch(() => rentPerMonth.value, () => {
       Object.assign(propertyValueByRentRanges, generatePropertyValueDataset('RENT'))
@@ -134,9 +154,8 @@ export default defineComponent({
       return isFinite(rentPerMonth * 12) ? Math.round(rentPerMonth * 12) : 0
     }
 
-    const calPropertyValue = (rentPerYear: number, expensesPerYear: number, capitalisationRate: number): number => {
-      // console.log('rentPerYear - expensesPerYear', rentPerYear, expensesPerYear)
-      const v = ((rentPerYear - expensesPerYear) * 100) / capitalisationRate
+    const calPropertyValue = (): number => {
+      const v = (((user.rentPerMonth * 12) - user.expensesPerYear) * 100) / user.capitalisationRate
       return isFinite(v) ? Math.round(v) : 0
     }
 
@@ -169,6 +188,7 @@ export default defineComponent({
       cashOnCashRentalYield,
       cashflowPerMonth,
       cashflowPerYear,
+      user,
     }
   },
   methods: {

@@ -11,7 +11,7 @@ app.directive('cleave', {
     el.cleave = new Cleave(el, binding.value || {})
   },
   updated: (el) => {
-    const event = new Event('input', {bubbles: true})
+    const event = new Event('input', { bubbles: true })
     setTimeout(function () {
       el.value = el.cleave.properties.result
       el.dispatchEvent(event)

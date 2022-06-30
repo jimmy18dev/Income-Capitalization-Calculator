@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, onMounted, defineComponent, ref, onBeforeUnmount, computed, watch } from 'vue'
+import { reactive, onMounted, defineComponent, watch } from 'vue'
 import { toBaht, percentages } from '../utils/currency'
 import numeral from 'numeral'
 
@@ -103,9 +103,9 @@ export default defineComponent({
       expensesPerYear: 12000,
       capitalisationRate: 5.5,
       propertyValue: 0,
-      toBankPerMonth: 0,
+      toBankPerMonth: 7000,
       additionalPropertyValue: 0,
-      propertyPrice: 0,
+      propertyPrice: 1200000,
       netRentalYield: 0,
       cashOnCashRentalYield: 0,
       cashflowPerMonth: 0,
@@ -132,6 +132,15 @@ export default defineComponent({
       return isFinite(value * 12) ? Math.round(value * 12) : 0
     }
 
+    const fitstCal = (): void => {
+      user.rentPerYear = perYear(user.rentPerMonth)
+      user.propertyValue = calPropertyValue(user.rentPerYear, user.expensesPerYear, user.capitalisationRate)
+      user.netRentalYield = calNetRentalYield(user.rentPerYear, user.expensesPerYear, user.additionalPropertyValue, user.propertyPrice)
+      user.cashOnCashRentalYield = calCashOnCashRentalYield(user.rentPerYear, user.expensesPerYear, user.toBankPerMonth, user.additionalPropertyValue)
+      user.cashflowPerMonth = calCashflowPerMonth(user.rentPerMonth, user.expensesPerYear, user.toBankPerMonth)
+      user.cashflowPerYear = perYear(user.cashflowPerMonth)
+    }
+
     const calPropertyValue = (rentPerYear: number, expensesPerYear: number, capitalisationRate: number): number => {
       const v = ((rentPerYear - expensesPerYear) * 100) / capitalisationRate
       return isFinite(v) ? Math.round(v) : 0
@@ -143,7 +152,7 @@ export default defineComponent({
     }
 
     const calCashOnCashRentalYield = (rentPerYear: number, expensesPerYear: number, toBankPerMonth: number, additionalPropertyValue: number): number => {
-      const v = ((rentPerYear - expensesPerYear - (toBankPerMonth * 12)) * 100) / (additionalPropertyValue)
+      const v = ((rentPerYear - expensesPerYear - (toBankPerMonth * 12)) * 100) / (additionalPropertyValue || 1)
       return isFinite(v) ? Number(v.toFixed(2)) : 0
     }
 
@@ -151,6 +160,8 @@ export default defineComponent({
       const v = rentPerMonth - toBankPerMonth - (expensesPerYear / 12)
       return isFinite(v) ? Math.round(v) : 0
     }
+
+    onMounted(fitstCal)
 
     return {
       user,

@@ -4,7 +4,7 @@
     <p class="mb-4">ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่ ต้องการประเมินราคาค่าเช่าเมื่อเทียบกับราคาขาย ถือว่าสูงหรือต่ำ</p>
 
     <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
-      <h2 class="text-lg mb-3">ราคาทรัพย์ที่ซื้อได้</h2>
+      <h2 class="text-xl mb-3">ราคาทรัพย์ที่ซื้อได้</h2>
       <div class="flex flex-col mb-4">
         <div>ผลตอบแทนที่ต้องการต่อปี</div>
         <InputPercentage
@@ -43,7 +43,7 @@
 
     <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
       <div class="flex flex-col mb-3">
-        <h2 class="text-lg">ผลตอบแทนการให้เช่าต่อปี</h2>
+        <h2 class="text-xl">ผลตอบแทนการให้เช่าต่อปี</h2>
         <div>สำหรับผู้ที่กู้ธนาคาร</div>
       </div>
       <p class="mb-3">คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย</p>
@@ -93,7 +93,7 @@
     </div>
     <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
       <div class="flex flex-col mb-3">
-        <h2 class="text-lg">ผลตอบแทนจากการให้เช่าสุทธิ</h2>
+        <h2 class="text-xl">ผลตอบแทนจากการให้เช่าสุทธิ</h2>
         <div>สำหรับเจ้าของซื้อเงินสด</div>
       </div>
       <p class="mb-3">เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย</p>

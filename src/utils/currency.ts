@@ -8,7 +8,7 @@ export const toBaht = (value: number | string): string => {
   }
 }
 
-export const percentages = (value: number | string): string => {
+export const toPercentages = (value: number | string): string => {
   if (!value) {
     return '...'
   } else {

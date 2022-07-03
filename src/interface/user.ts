@@ -4,7 +4,8 @@ interface User {
   expensesPerYear: number
   capitalisationRate: number
   propertyValue: number
-  toBankPerMonth: number
+  installmentPerMonth: number
+  installmentPerYear: number
   additionalPropertyValue: number
   propertyPrice: number
   netRentalYield: number

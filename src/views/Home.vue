@@ -138,9 +138,10 @@ export default defineComponent({
       rentPerMonth: 6500,
       rentPerYear: 0,
       expensesPerYear: 12000,
-      capitalisationRate: 5.5,
+      capitalisationRate: 6.0,
       propertyValue: 0,
       installmentPerMonth: 7000,
+      installmentPerYear: 0,
       additionalPropertyValue: 0,
       propertyPrice: 1200000,
       netRentalYield: 0,
@@ -191,6 +192,7 @@ export default defineComponent({
 
     const calCashOnCashRentalYield = (rentPerYear: number, expensesPerYear: number, installmentPerMonth: number, additionalPropertyValue: number): number => {
       const v = ((rentPerYear - expensesPerYear - (installmentPerMonth * 12)) * 100) / (additionalPropertyValue || 1)
+      // console.log('v', v)
       return isFinite(v) ? Number(v.toFixed(2)) : 0
     }
 

@@ -26,14 +26,16 @@
         <div>ค่าเช่าต่อเดือน</div>
         <InputPrice
           v-model:value="user.rentPerMonth"
-          :note="`${toBaht(user.rentPerYear)} บาทต่อปี`"
+          :note="`≈ ${toBaht(user.rentPerYear)} บาทต่อปี`"
           placeholder="0.00"
           unit="บาท"
         />
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col border-double border-b-4 border-gray-300 pb-1">
         <div class="flex-1">ราคาทรัพย์ที่ซื้อได้:</div>
-        <div class="flex justify-end items-baseline">
+        <div
+          class="flex justify-end items-baseline text-purple-700"
+        >
           <div class="mr-2 text-gray-500">ไม่เกิน</div>
           <div class="text-2xl">{{ toBaht(user.propertyValue) }}</div>
           <div class="ml-2">บาท</div>
@@ -42,16 +44,16 @@
     </div>
 
     <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
-      <div class="flex flex-col mb-3">
+      <div class="flex flex-col mb-4">
         <h2 class="text-xl">ผลตอบแทนการให้เช่าต่อปี</h2>
-        <div>สำหรับผู้ที่กู้ธนาคาร</div>
+        <div class="text-sm text-gray-500">สำหรับผู้ที่กู้ธนาคาร</div>
       </div>
       <p class="mb-3">คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย</p>
       <div class="flex flex-col mb-4">
         <div>ผ่อนธนาคารต่อเดือน</div>
         <InputPrice
           v-model:value="user.installmentPerMonth"
-          :note="`ประมาณ ${toBaht(user.installmentPerYear)} บาทต่อปี`"
+          :note="`≈ ${toBaht(user.installmentPerYear)} บาทต่อปี`"
           placeholder="0.00"
           unit="บาท"
         />
@@ -67,34 +69,54 @@
       </div>
       <div class="flex flex-col">
         <div class="flex-1">ผลตอบแทน:</div>
-        <div v-if="user.cashOnCashRentalYield > 1000" class="flex justify-end items-baseline">
+        <div v-if="user.cashOnCashRentalYield > 1000" class="flex justify-end items-baseline text-purple-700">
           <div class="mr-2 text-gray-500">มากกว่า</div>
           <div class="text-2xl">1,000</div>
           <div class="ml-2">%</div>
         </div>
-        <div v-else class="flex justify-end items-baseline">
+        <div
+          v-else
+          class="flex justify-end items-baseline"
+          :class="{
+            'text-red-700': user.cashOnCashRentalYield < 0,
+            'text-green-600': user.cashOnCashRentalYield > 0 && user.cashOnCashRentalYield <= 7,
+            'text-purple-700': user.cashOnCashRentalYield > 7
+          }"
+        >
           <div class="text-2xl">{{ toPercentages(user.cashOnCashRentalYield) }}</div>
-          <div class="ml-2">%</div>
+          <div class="ml-1">%</div>
         </div>
       </div>
       <div class="flex flex-col">
         <div class="flex-1">กระแสเงินสด:</div>
-        <div class="flex justify-end items-baseline">
+        <div
+          class="flex justify-end items-baseline"
+          :class="{
+            'text-red-700': user.cashflowPerMonth < 0,
+            'text-green-600': user.cashflowPerMonth > 0,
+          }"
+        >
           <div class="mr-2 text-gray-500">ต่อเดือน</div>
           <div class="text-2xl">{{ toBaht(user.cashflowPerMonth) }}</div>
-          <div class="ml-2">บาท</div>
+          <div class="ml-1">บาท</div>
         </div>
-        <div class="flex justify-end items-baseline">
+        <div
+          class="flex justify-end items-baseline"
+          :class="{
+            'text-red-700': user.cashflowPerYear < 0,
+            'text-green-600': user.cashflowPerYear > 0,
+          }"
+        >
           <div class="mr-2 text-gray-500">ต่อปี</div>
           <div class="text-2xl">{{ toBaht(user.cashflowPerYear) }}</div>
-          <div class="ml-2">บาท</div>
+          <div class="ml-1">บาท</div>
         </div>
       </div>
     </div>
     <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
-      <div class="flex flex-col mb-3">
+      <div class="flex flex-col mb-4">
         <h2 class="text-xl">ผลตอบแทนจากการให้เช่าสุทธิ</h2>
-        <div>สำหรับเจ้าของซื้อเงินสด</div>
+        <div class="text-sm text-gray-500">สำหรับเจ้าของซื้อเงินสด</div>
       </div>
       <p class="mb-3">เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย</p>
 

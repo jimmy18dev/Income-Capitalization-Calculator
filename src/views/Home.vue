@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col my-12">
-    <h1 class="text-3xl mb-3">ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า</h1>
-    <div>
-      <font-awesome-icon :icon="['far', 'arrow-alt-circle-up']" />
-    </div>
-    <p class="mb-4">ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่ ต้องการประเมินราคาค่าเช่าเมื่อเทียบกับราคาขาย ถือว่าสูงหรือต่ำ</p>
-
-    <div class="flex flex-col mb-6">
-      <h2 class="text-2xl mb-4">ราคาทรัพย์ที่เหมาะสม</h2>
+    <Header
+      head="ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า"
+      description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่ ต้องการประเมินราคาค่าเช่าเมื่อเทียบกับราคาขาย ถือว่าสูงหรือต่ำ"
+      class="mb-6"
+    />
+    <Section
+      head="ราคาทรัพย์ที่เหมาะสม"
+    >
       <div class="flex flex-col mb-4">
         <InputPercentage
           v-model:value="user.capitalisationRate"
@@ -36,21 +36,16 @@
       </div>
       <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
         <div class="flex-1">ราคาทรัพย์</div>
-        <div
-          class="flex justify-end items-baseline text-purple-700"
-        >
-          <div class="text-2xl">{{ toBaht(user.propertyValue) }}</div>
-          <div class="ml-2">บาท</div>
-        </div>
+        <ResultPrice
+          :price="user.propertyValue"
+        />
       </div>
-    </div>
-
-    <div class="flex flex-col mb-6">
-      <div class="flex flex-col mb-4">
-        <h2 class="text-xl">ผลตอบแทนการให้เช่าต่อปี</h2>
-        <div class="text-sm text-gray-500">สำหรับผู้ที่กู้ธนาคาร</div>
-      </div>
-      <p class="mb-3">คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย</p>
+    </Section>
+    <Section
+      head="ราคาทรัพย์ที่เหมาะสม"
+      description="คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย"
+      note="สำหรับผู้ที่กู้ธนาคาร"
+    >
       <div class="flex flex-col mb-4">
         <InputPrice
           v-model:value="user.installmentPerMonth"
@@ -78,38 +73,23 @@
       <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
         <div class="flex-1">กระแสเงินสด:</div>
         <div class="flex flex-col">
-          <div
-            class="flex justify-end items-baseline"
-            :class="{
-              'text-red-700': user.cashflowPerMonth < 0,
-              'text-green-600': user.cashflowPerMonth > 0,
-            }"
-          >
-            <div class="mr-2 text-gray-500">ต่อเดือน</div>
-            <div class="text-2xl">{{ toBaht(user.cashflowPerMonth) }}</div>
-            <div class="ml-1">บาท</div>
-          </div>
-          <div
-            class="flex justify-end items-baseline"
-            :class="{
-              'text-red-700': user.cashflowPerYear < 0,
-              'text-green-600': user.cashflowPerYear > 0,
-            }"
-          >
-            <div class="mr-2 text-gray-500">ต่อปี</div>
-            <div class="text-2xl">{{ toBaht(user.cashflowPerYear) }}</div>
-            <div class="ml-1">บาท</div>
-          </div>
+          <ResultCashflow
+            :cashflow="user.cashflowPerMonth"
+            prefix="ต่อเดือน"
+          />
+          <ResultCashflow
+            :cashflow="user.cashflowPerYear"
+            prefix="ต่อปี"
+          />
         </div>
       </div>
-    </div>
-    <div class="flex flex-col mb-6">
-      <div class="flex flex-col mb-4">
-        <h2 class="text-xl">ผลตอบแทนจากการให้เช่าสุทธิ</h2>
-        <div class="text-sm text-gray-500">สำหรับเจ้าของซื้อเงินสด</div>
-      </div>
-      <p class="mb-3">เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย</p>
+    </Section>
 
+    <Section
+      head="ผลตอบแทนจากการให้เช่าสุทธิ"
+      description="เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย"
+      note="สำหรับเจ้าของซื้อเงินสด"
+    >
       <div class="flex flex-col mb-4">
         <InputPrice
           v-model:value="user.propertyPrice"
@@ -124,25 +104,33 @@
           :percentages="user.netRentalYield"
         />
       </div>
-    </div>
+    </Section>
   </div>
 </template>
 
 <script lang="ts">
 import { reactive, onMounted, defineComponent, watch } from 'vue'
-import { toBaht, toPercentages } from '../utils/currency'
+import { toBaht } from '../utils/currency'
+import Header from '../components/Header.vue'
 import InputPrice from '../components/InputPrice.vue'
+import Section from '../components/Section.vue'
 import InputPercentage from '../components/InputPercentage.vue'
 import ResultPercentage from '../components/ResultPercentage.vue'
+import ResultCashflow from '../components/ResultCashflow.vue'
+import ResultPrice from '../components/ResultPrice.vue'
 import numeral from 'numeral'
 import User from '../interface/user'
 
 export default defineComponent({
   name: 'Home',
   components: {
+    Header,
+    Section,
     InputPrice,
     InputPercentage,
     ResultPercentage,
+    ResultCashflow,
+    ResultPrice,
   },
   setup () {
     const user: User = reactive({
@@ -221,7 +209,6 @@ export default defineComponent({
   },
   methods: {
     toBaht,
-    toPercentages,
   }
 })
 </script>

@@ -1,119 +1,109 @@
 <template>
   <div class="flex flex-col my-12">
-    <h1 class="text-2xl mb-3">คำนวณราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า</h1>
+    <h1 class="text-3xl mb-3">ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า</h1>
+    <div>
+      <font-awesome-icon :icon="['far', 'arrow-alt-circle-up']" />
+    </div>
     <p class="mb-4">ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่ ต้องการประเมินราคาค่าเช่าเมื่อเทียบกับราคาขาย ถือว่าสูงหรือต่ำ</p>
 
-    <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
-      <h2 class="text-xl mb-3">ราคาทรัพย์ที่ซื้อได้</h2>
+    <div class="flex flex-col mb-6">
+      <h2 class="text-2xl mb-4">ราคาทรัพย์ที่เหมาะสม</h2>
       <div class="flex flex-col mb-4">
-        <div>ผลตอบแทนที่ต้องการต่อปี</div>
         <InputPercentage
           v-model:value="user.capitalisationRate"
-          note="หรือใช้อัตราดอกเบี้ย สินเชื่อบ้าน-คอนโด (MRR)"
+          label="ผลตอบแทนที่ต้องการต่อปี"
+          note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
           placeholder="0.0"
           unit="%"
         />
       </div>
       <div class="flex flex-col mb-4">
-        <div>ค่าส่วนกลางต่อปี (ถ้ามี)</div>
         <InputPrice
           v-model:value="user.expensesPerYear"
+          label="ค่าส่วนกลางต่อปี (ถ้ามี)"
           placeholder="0.00"
           unit="บาท"
         />
       </div>
       <div class="flex flex-col mb-4">
-        <div>ค่าเช่าต่อเดือน</div>
         <InputPrice
           v-model:value="user.rentPerMonth"
-          :note="`≈ ${toBaht(user.rentPerYear)} บาทต่อปี`"
+          label="ค่าเช่าต่อเดือน"
           placeholder="0.00"
           unit="บาท"
+          :note="`≈ ${toBaht(user.rentPerYear)} บาทต่อปี`"
         />
       </div>
-      <div class="flex flex-col border-double border-b-4 border-gray-300 pb-1">
-        <div class="flex-1">ราคาทรัพย์ที่ซื้อได้:</div>
+      <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
+        <div class="flex-1">ราคาทรัพย์</div>
         <div
           class="flex justify-end items-baseline text-purple-700"
         >
-          <div class="mr-2 text-gray-500">ไม่เกิน</div>
           <div class="text-2xl">{{ toBaht(user.propertyValue) }}</div>
           <div class="ml-2">บาท</div>
         </div>
       </div>
     </div>
 
-    <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
+    <div class="flex flex-col mb-6">
       <div class="flex flex-col mb-4">
         <h2 class="text-xl">ผลตอบแทนการให้เช่าต่อปี</h2>
         <div class="text-sm text-gray-500">สำหรับผู้ที่กู้ธนาคาร</div>
       </div>
       <p class="mb-3">คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย</p>
       <div class="flex flex-col mb-4">
-        <div>ผ่อนธนาคารต่อเดือน</div>
         <InputPrice
           v-model:value="user.installmentPerMonth"
-          :note="`≈ ${toBaht(user.installmentPerYear)} บาทต่อปี`"
+          label="ผ่อนธนาคารต่อเดือน"
           placeholder="0.00"
           unit="บาท"
+          :note="`≈ ${toBaht(user.installmentPerYear)} บาทต่อปี`"
         />
       </div>
       <div class="flex flex-col mb-4">
-        <div>ต้นทุนเพิ่มเติม</div>
         <InputPrice
           v-model:value="user.additionalPropertyValue"
+          label="ต้นทุนเพิ่มเติม"
           placeholder="0.00"
           note="เช่น เงินจอง, เงินดาวน์, ค่ารีโนเวท, ค่าเฟอร์นิเจอร์"
           unit="บาท"
         />
       </div>
-      <div class="flex flex-col">
+      <div class="flex pb-1">
         <div class="flex-1">ผลตอบแทน:</div>
-        <div v-if="user.cashOnCashRentalYield > 1000" class="flex justify-end items-baseline text-purple-700">
-          <div class="mr-2 text-gray-500">มากกว่า</div>
-          <div class="text-2xl">1,000</div>
-          <div class="ml-2">%</div>
-        </div>
-        <div
-          v-else
-          class="flex justify-end items-baseline"
-          :class="{
-            'text-red-700': user.cashOnCashRentalYield < 0,
-            'text-green-600': user.cashOnCashRentalYield > 0 && user.cashOnCashRentalYield <= 7,
-            'text-purple-700': user.cashOnCashRentalYield > 7
-          }"
-        >
-          <div class="text-2xl">{{ toPercentages(user.cashOnCashRentalYield) }}</div>
-          <div class="ml-1">%</div>
-        </div>
+        <ResultPercentage
+          :percentages="user.cashOnCashRentalYield"
+        />
       </div>
-      <div class="flex flex-col">
+      <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
         <div class="flex-1">กระแสเงินสด:</div>
-        <div
-          class="flex justify-end items-baseline"
-          :class="{
-            'text-red-700': user.cashflowPerMonth < 0,
-            'text-green-600': user.cashflowPerMonth > 0,
-          }"
-        >
-          <div class="mr-2 text-gray-500">ต่อเดือน</div>
-          <div class="text-2xl">{{ toBaht(user.cashflowPerMonth) }}</div>
-          <div class="ml-1">บาท</div>
-        </div>
-        <div
-          class="flex justify-end items-baseline"
-          :class="{
-            'text-red-700': user.cashflowPerYear < 0,
-            'text-green-600': user.cashflowPerYear > 0,
-          }"
-        >
-          <div class="mr-2 text-gray-500">ต่อปี</div>
-          <div class="text-2xl">{{ toBaht(user.cashflowPerYear) }}</div>
-          <div class="ml-1">บาท</div>
+        <div class="flex flex-col">
+          <div
+            class="flex justify-end items-baseline"
+            :class="{
+              'text-red-700': user.cashflowPerMonth < 0,
+              'text-green-600': user.cashflowPerMonth > 0,
+            }"
+          >
+            <div class="mr-2 text-gray-500">ต่อเดือน</div>
+            <div class="text-2xl">{{ toBaht(user.cashflowPerMonth) }}</div>
+            <div class="ml-1">บาท</div>
+          </div>
+          <div
+            class="flex justify-end items-baseline"
+            :class="{
+              'text-red-700': user.cashflowPerYear < 0,
+              'text-green-600': user.cashflowPerYear > 0,
+            }"
+          >
+            <div class="mr-2 text-gray-500">ต่อปี</div>
+            <div class="text-2xl">{{ toBaht(user.cashflowPerYear) }}</div>
+            <div class="ml-1">บาท</div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="flex flex-col border p-6 rounded-xl mb-4 shadow">
+    <div class="flex flex-col mb-6">
       <div class="flex flex-col mb-4">
         <h2 class="text-xl">ผลตอบแทนจากการให้เช่าสุทธิ</h2>
         <div class="text-sm text-gray-500">สำหรับเจ้าของซื้อเงินสด</div>
@@ -121,19 +111,18 @@
       <p class="mb-3">เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย</p>
 
       <div class="flex flex-col mb-4">
-        <div>ราคาทรัพย์</div>
         <InputPrice
           v-model:value="user.propertyPrice"
+          label="ราคาทรัพย์"
           placeholder="0.00"
           unit="บาท"
         />
       </div>
-      <div class="flex flex-col">
+      <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
         <div class="flex-1">ผลตอบแทน:</div>
-        <div class="flex justify-end items-baseline">
-          <div class="text-2xl">{{ toPercentages(user.netRentalYield) }}</div>
-          <div class="ml-2">%</div>
-        </div>
+        <ResultPercentage
+          :percentages="user.netRentalYield"
+        />
       </div>
     </div>
   </div>
@@ -144,9 +133,8 @@ import { reactive, onMounted, defineComponent, watch } from 'vue'
 import { toBaht, toPercentages } from '../utils/currency'
 import InputPrice from '../components/InputPrice.vue'
 import InputPercentage from '../components/InputPercentage.vue'
-
+import ResultPercentage from '../components/ResultPercentage.vue'
 import numeral from 'numeral'
-
 import User from '../interface/user'
 
 export default defineComponent({
@@ -154,6 +142,7 @@ export default defineComponent({
   components: {
     InputPrice,
     InputPercentage,
+    ResultPercentage,
   },
   setup () {
     const user: User = reactive({

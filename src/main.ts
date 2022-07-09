@@ -3,6 +3,11 @@ import App from './App.vue'
 import Cleave from 'cleave.js'
 import router from './router'
 import './assets/styles/main.css'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faArrowAltCircleUp as farArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons'
+
+library.add(farArrowAltCircleUp)
 
 const app = createApp(App)
 
@@ -20,4 +25,5 @@ app.directive('cleave', {
 })
 
 app.use(router)
+app.component('font-awesome-icon', FontAwesomeIcon)
 app.mount('#app')

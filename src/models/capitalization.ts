@@ -8,7 +8,6 @@ interface ICapitalization {
   additionalPropertyValue: number
   propertyPrice: number
 }
-
 export default class Capitalization {
   public rentPerMonth: number
   public expensesPerYear: number

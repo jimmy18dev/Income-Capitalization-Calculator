@@ -8,8 +8,8 @@
     }"
   >
     <div v-if="prefix" class="mr-2 text-gray-500">{{ prefix }}</div>
-    <div class="text-2xl w-36 text-right">{{ toBaht(price) }}</div>
-    <div class="ml-1">บาท</div>
+    <div class="font-kanit-regular text-2xl w-36 text-right">{{ toBaht(price) }}</div>
+    <div class="w-9 text-right">บาท</div>
   </div>
 </template>
 

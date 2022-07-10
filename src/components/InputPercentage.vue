@@ -1,20 +1,24 @@
 <template>
-  <Label>{{ label }}</Label>
-  <div class="flex items-baseline border-b border-gray-400">
-    <input
-      class="text-right flex-1 px-0 m-0 text-2xl bg-transparent outline-none"
-      type="tel"
-      :placeholder="placeholder"
-      :value="value"
-      v-cleave="{
-        numeral: true,
-        numeralThousandsGroupStyle: 'thousand'
-      }"
-      @input="$emit('update:value', $event.target.value)"
-    >
-    <div class="ml-2">{{ unit }}</div>
+  <div class="flex flex-col">
+    <Label>{{ label }}</Label>
+    <div class="flex relative">
+      <input
+        class="font-kanit-regular text-right flex-1 px-0 m-0 text-2xl bg-transparent outline-none border-b border-gray-300 pr-9 focus:border-gray-600"
+        type="tel"
+        :placeholder="placeholder"
+        :value="value"
+        v-cleave="{
+          numeral: true,
+          numeralPositiveOnly: true,
+          numeralDecimalScale: 1,
+          numeralIntegerScale: 2
+        }"
+        @input="$emit('update:value', $event.target.value)"
+      >
+      <div class="absolute inset-y-0 right-0 left-auto w-9 flex items-center justify-end">{{ unit }}</div>
+    </div>
+    <div v-if="note" class="text-xs mt-1 text-gray-500 text-right">{{ note }}</div>
   </div>
-  <div class="text-xs mt-1 text-gray-500 text-right">{{ note }}</div>
 </template>
 
 <script lang="ts">

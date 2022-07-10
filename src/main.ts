@@ -5,9 +5,9 @@ import router from './router'
 import './assets/styles/main.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faArrowAltCircleUp as farArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons'
+import { faCalendar as farCalendar, faHandPointRight as farHandPointRight } from '@fortawesome/free-regular-svg-icons'
 
-library.add(farArrowAltCircleUp)
+library.add(farCalendar, farHandPointRight)
 
 const app = createApp(App)
 

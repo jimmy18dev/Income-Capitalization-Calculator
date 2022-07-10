@@ -5,37 +5,35 @@
       description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่ ต้องการประเมินราคาค่าเช่าเมื่อเทียบกับราคาขาย ถือว่าสูงหรือต่ำ"
       class="mb-6"
     />
-    <Section
-      head="ราคาทรัพย์ที่เหมาะสม"
-    >
-      <div class="flex flex-col mb-4">
-        <InputPercentage
-          v-model:value="capitalization.capitalisationRate"
-          label="ผลตอบแทนที่ต้องการต่อปี"
-          note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
-          placeholder="0.0"
-          unit="%"
-        />
-      </div>
-      <div class="flex flex-col mb-4">
-        <InputPrice
-          v-model:value="capitalization.expensesPerYear"
-          label="ค่าส่วนกลางต่อปี (ถ้ามี)"
-          placeholder="0.00"
-          unit="บาท"
-        />
-      </div>
-      <div class="flex flex-col mb-4">
-        <InputPrice
-          v-model:value="capitalization.rentPerMonth"
-          label="ค่าเช่าต่อเดือน"
-          placeholder="0.00"
-          unit="บาท"
-          :note="`≈ ${toBaht(capitalization.rentPerYear())} บาทต่อปี`"
-        />
-      </div>
+    <Section head="ราคาทรัพย์ที่เหมาะสม">
+      <InputPercentage
+        v-model:value="capitalization.capitalisationRate"
+        class="mb-4"
+        label="ผลตอบแทนที่ต้องการต่อปี"
+        note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
+        placeholder="0.0"
+        unit="%"
+      />
+      <InputPrice
+        v-model:value="capitalization.expensesPerYear"
+        class="mb-4"
+        label="ค่าส่วนกลางต่อปี (ถ้ามี)"
+        placeholder="0.00"
+        unit="บาท"
+      />
+      <InputPrice
+        v-model:value="capitalization.rentPerMonth"
+        class="mb-4"
+        label="ค่าเช่าต่อเดือน"
+        placeholder="0.00"
+        unit="บาท"
+        :note="`≈ ${toBaht(capitalization.rentPerYear())} บาทต่อปี`"
+      />
       <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-        <div class="flex-1">ราคาทรัพย์</div>
+        <div class="flex-1">
+          <font-awesome-icon :icon="['far', 'badge-percent']" />
+          <span>ราคาทรัพย์</span>
+        </div>
         <ResultPrice
           :price="capitalization.propertyValue()"
         />
@@ -141,9 +139,7 @@ export default defineComponent({
       propertyPrice: 1200000,
     }))
 
-    watch(() => capitalization, () => {
-      console.log('capitalization watch.')
-    }, { deep: true })
+    // watch(() => capitalization, () => {}, { deep: true })
 
     return {
       capitalization,

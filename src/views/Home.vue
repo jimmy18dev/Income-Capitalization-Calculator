@@ -5,6 +5,7 @@
       description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่ ต้องการประเมินราคาค่าเช่าเมื่อเทียบกับราคาขาย ถือว่าสูงหรือต่ำ"
       class="mb-6"
     />
+    <p>ID: {{ capitalization.id }}</p>
     <Section head="ราคาทรัพย์ที่เหมาะสม">
       <InputPercentage
         v-model:value="capitalization.capitalisationRate"
@@ -117,6 +118,7 @@ import ResultPercentage from '../components/ResultPercentage.vue'
 import ResultCashflow from '../components/ResultCashflow.vue'
 import ResultPrice from '../components/ResultPrice.vue'
 import Capitalization from '../models/capitalization'
+import { useCapitalizationStore } from '../store/capitalization'
 
 export default defineComponent({
   name: 'Home',
@@ -130,6 +132,7 @@ export default defineComponent({
     ResultPrice,
   },
   setup () {
+    const capitalizationStore = useCapitalizationStore()
     const capitalization: Capitalization = reactive(new Capitalization({
       rentPerMonth: 6500,
       expensesPerYear: 12000,
@@ -138,6 +141,8 @@ export default defineComponent({
       additionalPropertyValue: 0,
       propertyPrice: 1200000,
     }))
+
+    capitalizationStore.increment()
 
     // watch(() => capitalization, () => {}, { deep: true })
 

@@ -40,5 +40,4 @@ export default defineComponent({
   },
   emits: ['update:value']
 })
-
 </script>

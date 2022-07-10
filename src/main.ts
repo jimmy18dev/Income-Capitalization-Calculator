@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import Cleave from 'cleave.js'
 import router from './router'
@@ -9,6 +10,7 @@ import { faCalendar as farCalendar, faHandPointRight as farHandPointRight } from
 
 library.add(farCalendar, farHandPointRight)
 
+const pinia = createPinia()
 const app = createApp(App)
 
 app.directive('cleave', {
@@ -24,6 +26,7 @@ app.directive('cleave', {
   }
 })
 
+app.use(pinia)
 app.use(router)
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.mount('#app')

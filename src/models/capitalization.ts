@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid'
 import numeral from 'numeral'
 
 interface ICapitalization {
@@ -9,6 +10,7 @@ interface ICapitalization {
   propertyPrice: number
 }
 export default class Capitalization {
+  public id: string
   public rentPerMonth: number
   public expensesPerYear: number
   public capitalisationRate: number
@@ -17,6 +19,7 @@ export default class Capitalization {
   public propertyPrice: number
 
   constructor (data?: ICapitalization) {
+    this.id = nanoid()
     this.rentPerMonth = data?.rentPerMonth || 0
     this.expensesPerYear = data?.expensesPerYear || 0
     this.capitalisationRate = data?.capitalisationRate || 0

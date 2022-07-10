@@ -12,7 +12,9 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/vue-fontawesome": "^3.0.1",
     "cleave.js": "^1.6.0",
+    "nanoid": "^4.0.0",
     "numeral": "^2.0.6",
+    "pinia": "^2.0.14",
     "vue": "^3.2.25",
     "vue-router": "^4.0.16"
   },

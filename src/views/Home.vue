@@ -5,10 +5,18 @@
       description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่ ต้องการประเมินราคาค่าเช่าเมื่อเทียบกับราคาขาย ถือว่าสูงหรือต่ำ"
       class="mb-6"
     />
-    <p>ID: {{ capitalization.id }}</p>
+    <div class="flex">
+      <button class="flex bg-purple-700 text-white p-4 rounded-md" @click="save">Save</button>
+    </div>
+    <div class="flex flex-col">
+      <div v-for="capitalization in capitalizationStore.listAll" :key="capitalization.id">
+        <div class="bg-red-100 mb-1" @click="load(capitalization.id)">{{ capitalization.id }}</div>
+      </div>
+    </div>
+    <div>CurrentID: {{ currentCapitalization.id }}</div>
     <Section head="ราคาทรัพย์ที่เหมาะสม">
       <InputPercentage
-        v-model:value="capitalization.capitalisationRate"
+        v-model:value="currentCapitalization.capitalisationRate"
         class="mb-4"
         label="ผลตอบแทนที่ต้องการต่อปี"
         note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
@@ -16,27 +24,24 @@
         unit="%"
       />
       <InputPrice
-        v-model:value="capitalization.expensesPerYear"
+        v-model:value="currentCapitalization.expensesPerYear"
         class="mb-4"
         label="ค่าส่วนกลางต่อปี (ถ้ามี)"
         placeholder="0.00"
         unit="บาท"
       />
       <InputPrice
-        v-model:value="capitalization.rentPerMonth"
+        v-model:value="currentCapitalization.rentPerMonth"
         class="mb-4"
         label="ค่าเช่าต่อเดือน"
         placeholder="0.00"
         unit="บาท"
-        :note="`≈ ${toBaht(capitalization.rentPerYear())} บาทต่อปี`"
+        :note="`≈ ${toBaht(currentCapitalization.rentPerYear())} บาทต่อปี`"
       />
       <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-        <div class="flex-1">
-          <font-awesome-icon :icon="['far', 'badge-percent']" />
-          <span>ราคาทรัพย์</span>
-        </div>
+        <div class="flex-1">ราคาทรัพย์</div>
         <ResultPrice
-          :price="capitalization.propertyValue()"
+          :price="currentCapitalization.propertyValue()"
         />
       </div>
     </Section>
@@ -47,16 +52,16 @@
     >
       <div class="flex flex-col mb-4">
         <InputPrice
-          v-model:value="capitalization.installmentPerMonth"
+          v-model:value="currentCapitalization.installmentPerMonth"
           label="ผ่อนธนาคารต่อเดือน"
           placeholder="0.00"
           unit="บาท"
-          :note="`≈ ${toBaht(capitalization.installmentPerYear())} บาทต่อปี`"
+          :note="`≈ ${toBaht(currentCapitalization.installmentPerYear())} บาทต่อปี`"
         />
       </div>
       <div class="flex flex-col mb-4">
         <InputPrice
-          v-model:value="capitalization.additionalPropertyValue"
+          v-model:value="currentCapitalization.additionalPropertyValue"
           label="ต้นทุนเพิ่มเติม"
           placeholder="0.00"
           note="เช่น เงินจอง, เงินดาวน์, ค่ารีโนเวท, ค่าเฟอร์นิเจอร์"
@@ -66,18 +71,18 @@
       <div class="flex pb-1">
         <div class="flex-1">ผลตอบแทน:</div>
         <ResultPercentage
-          :percentages="capitalization.cashOnCashRentalYield()"
+          :percentages="currentCapitalization.cashOnCashRentalYield()"
         />
       </div>
       <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
         <div class="flex-1">กระแสเงินสด:</div>
         <div class="flex flex-col">
           <ResultCashflow
-            :cashflow="capitalization.cashflowPerMonth()"
+            :cashflow="currentCapitalization.cashflowPerMonth()"
             prefix="ต่อเดือน"
           />
           <ResultCashflow
-            :cashflow="capitalization.cashflowPerYear()"
+            :cashflow="currentCapitalization.cashflowPerYear()"
             prefix="ต่อปี"
           />
         </div>
@@ -91,7 +96,7 @@
     >
       <div class="flex flex-col mb-4">
         <InputPrice
-          v-model:value="capitalization.propertyPrice"
+          v-model:value="currentCapitalization.propertyPrice"
           label="ราคาทรัพย์"
           placeholder="0.00"
           unit="บาท"
@@ -100,7 +105,7 @@
       <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
         <div class="flex-1">ผลตอบแทน:</div>
         <ResultPercentage
-          :percentages="capitalization.netRentalYield()"
+          :percentages="currentCapitalization.netRentalYield()"
         />
       </div>
     </Section>
@@ -133,7 +138,7 @@ export default defineComponent({
   },
   setup () {
     const capitalizationStore = useCapitalizationStore()
-    const capitalization: Capitalization = reactive(new Capitalization({
+    const currentCapitalization: Capitalization = reactive(new Capitalization({
       rentPerMonth: 6500,
       expensesPerYear: 12000,
       capitalisationRate: 6.0,
@@ -142,12 +147,29 @@ export default defineComponent({
       propertyPrice: 1200000,
     }))
 
-    capitalizationStore.increment()
+    const save = (): void => {
+      console.log('save', currentCapitalization)
+      capitalizationStore.save(currentCapitalization)
+    }
 
-    // watch(() => capitalization, () => {}, { deep: true })
+    const load = (capId: string): void => {
+      const result = capitalizationStore.getById(capId)
+      if (result) {
+        console.log('Load', result.id, result)
+        // currentCapitalization.update(result)
+        currentCapitalization.rentPerMonth = 10000
+      }
+    }
+
+    // watch(() => capitalization, () => {
+    //   capitalizationStore.save(capitalization)
+    // }, { deep: true })
 
     return {
-      capitalization,
+      currentCapitalization,
+      save,
+      load,
+      capitalizationStore,
     }
   },
   methods: {

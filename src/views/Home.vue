@@ -31,6 +31,7 @@
       </div> -->
     </div>
     <div v-if="dataset.length" class="flex flex-col w-1/3 mx-auto my-6">
+      <button @click="removeTab(currentTabIndex)">Delelte</button>
       <Section head="ราคาทรัพย์ที่เหมาะสม">
         <InputPercentage
           v-model:value="dataset[currentTabIndex].capitalisationRate"
@@ -209,6 +210,10 @@ export default defineComponent({
       }))
       changeTabIndex(newTabIndex - 1)
     }
+
+    const removeTab = (index: number): void => {
+      dataset.splice(index, 1)
+    }
     
     onMounted(init)
 
@@ -224,6 +229,7 @@ export default defineComponent({
       capitalizationStore,
       changeTabIndex,
       addNewTab,
+      removeTab,
     }
   },
   methods: {

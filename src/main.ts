@@ -6,9 +6,9 @@ import router from './router'
 import './assets/styles/main.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faCalendar as farCalendar, faHandPointRight as farHandPointRight } from '@fortawesome/free-regular-svg-icons'
+import { faCalendar as farCalendar, faHandPointRight as farHandPointRight, faSquarePlus as farSquarePlus } from '@fortawesome/free-regular-svg-icons'
 
-library.add(farCalendar, farHandPointRight)
+library.add(farCalendar, farHandPointRight, farSquarePlus)
 
 const pinia = createPinia()
 const app = createApp(App)

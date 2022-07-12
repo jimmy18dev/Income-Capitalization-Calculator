@@ -3,6 +3,7 @@ import numeral from 'numeral'
 
 interface ICapitalization {
   // id: string | undefined
+  name: string | undefined
   rentPerMonth: number | undefined
   expensesPerYear: number | undefined
   capitalisationRate: number | undefined
@@ -12,28 +13,36 @@ interface ICapitalization {
 }
 export default class Capitalization {
   public id: string
+  public name: string
   public rentPerMonth: number
   public expensesPerYear: number
   public capitalisationRate: number
   public installmentPerMonth: number
   public additionalPropertyValue: number
   public propertyPrice: number
+  public updateAt: number
 
   constructor (data?: ICapitalization) {
     this.id = nanoid()
+    this.name = data?.name || ''
     this.rentPerMonth = data?.rentPerMonth || 0
     this.expensesPerYear = data?.expensesPerYear || 0
     this.capitalisationRate = data?.capitalisationRate || 0
     this.installmentPerMonth = data?.installmentPerMonth || 0
     this.additionalPropertyValue = data?.additionalPropertyValue || 0
     this.propertyPrice = data?.propertyPrice || 0
+    this.updateAt = 0
   }
 
   public update (data: any) {
+    const rentPerMonth = numeral(this.rentPerMonth).value() || 0
+    const expensesPerYear = numeral(this.expensesPerYear).value() || 0
+    const capitalisationRate = numeral(this.capitalisationRate).value() || 0
+
     this.id = data?.id
-    this.rentPerMonth = data?.rentPerMonth || 0
-    this.expensesPerYear = data?.expensesPerYear || 0
-    this.capitalisationRate = data?.capitalisationRate || 0
+    this.rentPerMonth = rentPerMonth
+    this.expensesPerYear = expensesPerYear
+    this.capitalisationRate = capitalisationRate
     this.installmentPerMonth = data?.installmentPerMonth || 0
     this.additionalPropertyValue = data?.additionalPropertyValue || 0
     this.propertyPrice = data?.propertyPrice || 0
@@ -85,6 +94,10 @@ export default class Capitalization {
   public expensesPerMonth (): number {
     const expensesPerYear = numeral(this.expensesPerYear).value() || 0
     return this.perMonth(expensesPerYear)
+  }
+
+  public fixcapitalisationRate(): void {
+    this.capitalisationRate = 99
   }
 
   private perYear (value: number): number {

@@ -7,15 +7,15 @@
         type="tel"
         :placeholder="placeholder"
         :value="value"
-        v-cleave="{
+        @input="$emit('update:value', $event.target.value)"
+      >
+      <!-- v-cleave="{
           numeral: true,
           numeralThousandsGroupStyle: 'thousand',
           numeralPositiveOnly: true,
           numeralDecimalScale: 0,
           numeralIntegerScale: 8
-        }"
-        @input="$emit('update:value', $event.target.value)"
-      >
+        }" -->
       <div class="absolute inset-y-0 right-0 left-auto w-9 flex items-center justify-end">{{ unit }}</div>
     </div>
     <div v-if="note" class="text-xs mt-1 text-gray-500 text-right">{{ note }}</div>

@@ -1,132 +1,109 @@
 <template>
-  <div class="flex flex-col">
-    <div class="flex flex-col bg-white sticky inset-x-0 top-0 z-10">
-      <Header
-        head="ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า"
-        description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่"
-        class="w-1/3 mx-auto py-6"
-      />
-      <div class="flex w-1/3 mx-auto">
-        <div
-          v-for="(tab, index) in dataset"
-          :key="tab.id"
-          class="px-4 py-3 cursor-pointer"
-          :class="{'text-purple-700 bg-gray-100': index === currentTabIndex}"
-          @click="changeTabIndex(index)"
-        >{{ tab.name }}</div>
-        <button class="px-4 py-3 cursor-pointer" @click="addNewTab">
-          <font-awesome-icon :icon="['far', 'square-plus']" />
-        </button>
+  <Header
+    head="ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า"
+    description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่"
+    class="p-6"
+  />
+  <div v-if="dataset.length" class="grid grid-cols-3 gap-6 mx-6 mb-6">
+    <div v-for="(data, index) in dataset" :key="data.id" class="flex-1">
+      <button v-if="!data.isActive" class="flex justify-center w-full px-6 py-4 border-2 border-dashed font-kanit-regular text-lg text-gray-500 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
+      <div v-else class=" shadow border p-6 rounded-lg">
+        <Section head="ราคาทรัพย์ที่เหมาะสม">
+          <InputPercentage
+            v-model:value="data.capitalisationRate"
+            class="mb-4"
+            label="ผลตอบแทนที่ต้องการต่อปี"
+            note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
+            placeholder="0.0"
+            unit="%"
+          />
+          <InputPrice
+            v-model:value="data.expensesPerYear"
+            class="mb-4"
+            label="ค่าส่วนกลางต่อปี (ถ้ามี)"
+            placeholder="0.00"
+            unit="บาท"
+          />
+          <InputPrice
+            v-model:value="data.rentPerMonth"
+            class="mb-4"
+            label="ค่าเช่าต่อเดือน"
+            placeholder="0.00"
+            unit="บาท"
+            :note="`≈ ${toBaht(data.rentPerYear())} บาทต่อปี`"
+          />
+          <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
+            <div class="flex-1">ราคาทรัพย์</div>
+            <ResultPrice
+              :price="data.propertyValue()"
+            />
+          </div>
+        </Section>
+        <Section
+          head="ราคาทรัพย์ที่เหมาะสม"
+          description="คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย"
+          note="สำหรับผู้ที่กู้ธนาคาร"
+        >
+          <div class="flex flex-col mb-4">
+            <InputPrice
+              v-model:value="data.installmentPerMonth"
+              label="ผ่อนธนาคารต่อเดือน"
+              placeholder="0.00"
+              unit="บาท"
+              :note="`≈ ${toBaht(data.installmentPerYear())} บาทต่อปี`"
+            />
+          </div>
+          <div class="flex flex-col mb-4">
+            <InputPrice
+              v-model:value="data.additionalPropertyValue"
+              label="ต้นทุนเพิ่มเติม"
+              placeholder="0.00"
+              note="เช่น เงินจอง, เงินดาวน์, ค่ารีโนเวท, ค่าเฟอร์นิเจอร์"
+              unit="บาท"
+            />
+          </div>
+          <div class="flex pb-1">
+            <div class="flex-1">ผลตอบแทน:</div>
+            <ResultPercentage
+              :percentages="data.cashOnCashRentalYield()"
+            />
+          </div>
+          <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
+            <div class="flex-1">กระแสเงินสด:</div>
+            <div class="flex flex-col">
+              <ResultCashflow
+                :cashflow="data.cashflowPerMonth()"
+                prefix="ต่อเดือน"
+              />
+              <ResultCashflow
+                :cashflow="data.cashflowPerYear()"
+                prefix="ต่อปี"
+              />
+            </div>
+          </div>
+        </Section>
+        <Section
+          head="ผลตอบแทนจากการให้เช่าสุทธิ"
+          description="เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย"
+          note="สำหรับเจ้าของซื้อเงินสด"
+        >
+          <div class="flex flex-col mb-4">
+            <InputPrice
+              v-model:value="data.propertyPrice"
+              label="ราคาทรัพย์"
+              placeholder="0.00"
+              unit="บาท"
+            />
+          </div>
+          <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
+            <div class="flex-1">ผลตอบแทน:</div>
+            <ResultPercentage
+              :percentages="data.netRentalYield()"
+            />
+          </div>
+        </Section>
       </div>
-      <!-- <div class="flex border">
-        <div class="flex" >
-          <input type="text" class="p-3 mr-2 border rounded-lg flex-1">
-          <button class="flex bg-purple-700 text-white p-3 rounded-lg" @click="save">Save</button>
-        </div>
-        <div class="flex flex-col">
-          <div v-for="capitalization in capitalizationStore.listAll" :key="capitalization.id">
-            <div class="bg-red-100 mb-1" @click="load(capitalization.id)">{{ capitalization.id }}</div>
-          </div>
-        </div>
-      </div> -->
-    </div>
-    <div v-if="dataset.length" class="flex flex-col w-1/3 mx-auto my-6">
-      <button @click="removeTab(currentTabIndex)">Delelte</button>
-      <Section head="ราคาทรัพย์ที่เหมาะสม">
-        <InputPercentage
-          v-model:value="dataset[currentTabIndex].capitalisationRate"
-          class="mb-4"
-          label="ผลตอบแทนที่ต้องการต่อปี"
-          note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
-          placeholder="0.0"
-          unit="%"
-        />
-        <InputPrice
-          v-model:value="dataset[currentTabIndex].expensesPerYear"
-          class="mb-4"
-          label="ค่าส่วนกลางต่อปี (ถ้ามี)"
-          placeholder="0.00"
-          unit="บาท"
-        />
-        <InputPrice
-          v-model:value="dataset[currentTabIndex].rentPerMonth"
-          class="mb-4"
-          label="ค่าเช่าต่อเดือน"
-          placeholder="0.00"
-          unit="บาท"
-          :note="`≈ ${toBaht(dataset[currentTabIndex].rentPerYear())} บาทต่อปี`"
-        />
-        <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-          <div class="flex-1">ราคาทรัพย์</div>
-          <ResultPrice
-            :price="dataset[currentTabIndex].propertyValue()"
-          />
-        </div>
-      </Section>
-      <Section
-        head="ราคาทรัพย์ที่เหมาะสม"
-        description="คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย"
-        note="สำหรับผู้ที่กู้ธนาคาร"
-      >
-        <div class="flex flex-col mb-4">
-          <InputPrice
-            v-model:value="dataset[currentTabIndex].installmentPerMonth"
-            label="ผ่อนธนาคารต่อเดือน"
-            placeholder="0.00"
-            unit="บาท"
-            :note="`≈ ${toBaht(dataset[currentTabIndex].installmentPerYear())} บาทต่อปี`"
-          />
-        </div>
-        <div class="flex flex-col mb-4">
-          <InputPrice
-            v-model:value="dataset[currentTabIndex].additionalPropertyValue"
-            label="ต้นทุนเพิ่มเติม"
-            placeholder="0.00"
-            note="เช่น เงินจอง, เงินดาวน์, ค่ารีโนเวท, ค่าเฟอร์นิเจอร์"
-            unit="บาท"
-          />
-        </div>
-        <div class="flex pb-1">
-          <div class="flex-1">ผลตอบแทน:</div>
-          <ResultPercentage
-            :percentages="dataset[currentTabIndex].cashOnCashRentalYield()"
-          />
-        </div>
-        <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-          <div class="flex-1">กระแสเงินสด:</div>
-          <div class="flex flex-col">
-            <ResultCashflow
-              :cashflow="dataset[currentTabIndex].cashflowPerMonth()"
-              prefix="ต่อเดือน"
-            />
-            <ResultCashflow
-              :cashflow="dataset[currentTabIndex].cashflowPerYear()"
-              prefix="ต่อปี"
-            />
-          </div>
-        </div>
-      </Section>
-
-      <Section
-        head="ผลตอบแทนจากการให้เช่าสุทธิ"
-        description="เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย"
-        note="สำหรับเจ้าของซื้อเงินสด"
-      >
-        <div class="flex flex-col mb-4">
-          <InputPrice
-            v-model:value="dataset[currentTabIndex].propertyPrice"
-            label="ราคาทรัพย์"
-            placeholder="0.00"
-            unit="บาท"
-          />
-        </div>
-        <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-          <div class="flex-1">ผลตอบแทน:</div>
-          <ResultPercentage
-            :percentages="dataset[currentTabIndex].netRentalYield()"
-          />
-        </div>
-      </Section>
+      <button v-if="data.isActive && index !== 1" class="flex justify-center mt-6 w-full px-6 py-4 bg-gray-200 text-gray-500 font-kanit-regular text-lg rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
     </div>
   </div>
 </template>
@@ -159,62 +136,40 @@ export default defineComponent({
     const currentTabIndex = ref(0)
     const dataset = reactive([] as Capitalization[])
     const capitalizationStore = useCapitalizationStore()
-    // const currentCapitalization: Capitalization = reactive(new Capitalization({
-    //   rentPerMonth: 6500,
-    //   expensesPerYear: 12000,
-    //   capitalisationRate: 6.0,
-    //   installmentPerMonth: 7000,
-    //   additionalPropertyValue: 0,
-    //   propertyPrice: 1200000,
-    // }))
-
-    // const save = (): void => {
-    //   console.log('save', currentCapitalization)
-    //   capitalizationStore.save(currentCapitalization)
-    // }
-
-    // const load = (capId: string): void => {
-    //   const result = capitalizationStore.getById(capId)
-    //   if (result) {
-    //     console.log('Load', result.id, result)
-    //     dataset[currentTabIndex].update(result)
-    //   }
-    // }
-
+    
     const init = async (): Promise<void> => {
       dataset.push(new Capitalization({
-        name: 'Tab 1',
+        name: 'เปรียบเทียบ 1',
         rentPerMonth: 6500,
         expensesPerYear: 12000,
         capitalisationRate: 6.0,
         installmentPerMonth: 7000,
         additionalPropertyValue: 0,
-        propertyPrice: 1200000
+        propertyPrice: 1200000,
+        isActive: false
       }))
-    }
-
-    const changeTabIndex = (index: number): void => {
-      currentTabIndex.value = index
-    }
-
-    const addNewTab = (): void => {
-      const newTabIndex = dataset.length + 1
       dataset.push(new Capitalization({
-        name: `Tab ${newTabIndex}`,
-        rentPerMonth: 7000,
-        expensesPerYear: 12000,
-        capitalisationRate: 6.0,
+        name: 'เปรียบเทียบ 2',
+        rentPerMonth: 7500,
+        expensesPerYear: 13000,
+        capitalisationRate: 6.2,
         installmentPerMonth: 7000,
         additionalPropertyValue: 0,
-        propertyPrice: 1200000
+        propertyPrice: 1200000,
+        isActive: true
       }))
-      changeTabIndex(newTabIndex - 1)
+      dataset.push(new Capitalization({
+        name: 'เปรียบเทียบ 3',
+        rentPerMonth: 8500,
+        expensesPerYear: 14000,
+        capitalisationRate: 6.4,
+        installmentPerMonth: 7000,
+        additionalPropertyValue: 0,
+        propertyPrice: 1200000,
+        isActive: false
+      }))
     }
 
-    const removeTab = (index: number): void => {
-      dataset.splice(index, 1)
-    }
-    
     onMounted(init)
 
     // watch(() => capitalization, () => {
@@ -224,12 +179,7 @@ export default defineComponent({
     return {
       dataset,
       currentTabIndex,
-      // save,
-      // load,
       capitalizationStore,
-      changeTabIndex,
-      addNewTab,
-      removeTab,
     }
   },
   methods: {

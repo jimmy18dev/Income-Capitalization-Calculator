@@ -25,6 +25,6 @@
     src: url(../fonts/Kanit/Kanit-Medium.ttf) format("woff");
   }
   body {
-    @apply bg-gray-100;
+    @apply bg-white;
   }
 }

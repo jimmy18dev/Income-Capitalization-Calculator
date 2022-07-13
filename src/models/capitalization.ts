@@ -2,7 +2,6 @@ import { nanoid } from 'nanoid'
 import numeral from 'numeral'
 
 interface ICapitalization {
-  // id: string | undefined
   name: string | undefined
   rentPerMonth: number | undefined
   expensesPerYear: number | undefined
@@ -10,6 +9,7 @@ interface ICapitalization {
   installmentPerMonth: number | undefined
   additionalPropertyValue: number | undefined
   propertyPrice: number | undefined
+  isActive: boolean | undefined
 }
 export default class Capitalization {
   public id: string
@@ -21,6 +21,7 @@ export default class Capitalization {
   public additionalPropertyValue: number
   public propertyPrice: number
   public updateAt: number
+  public isActive: boolean
 
   constructor (data?: ICapitalization) {
     this.id = nanoid()
@@ -32,20 +33,7 @@ export default class Capitalization {
     this.additionalPropertyValue = data?.additionalPropertyValue || 0
     this.propertyPrice = data?.propertyPrice || 0
     this.updateAt = 0
-  }
-
-  public update (data: any) {
-    const rentPerMonth = numeral(this.rentPerMonth).value() || 0
-    const expensesPerYear = numeral(this.expensesPerYear).value() || 0
-    const capitalisationRate = numeral(this.capitalisationRate).value() || 0
-
-    this.id = data?.id
-    this.rentPerMonth = rentPerMonth
-    this.expensesPerYear = expensesPerYear
-    this.capitalisationRate = capitalisationRate
-    this.installmentPerMonth = data?.installmentPerMonth || 0
-    this.additionalPropertyValue = data?.additionalPropertyValue || 0
-    this.propertyPrice = data?.propertyPrice || 0
+    this.isActive = data?.isActive || false
   }
   
   public propertyValue (): number {
@@ -96,8 +84,12 @@ export default class Capitalization {
     return this.perMonth(expensesPerYear)
   }
 
-  public fixcapitalisationRate(): void {
-    this.capitalisationRate = 99
+  public disable (): void {
+    this.isActive = false
+  }
+
+  public enable (): void {
+    this.isActive = true
   }
 
   private perYear (value: number): number {

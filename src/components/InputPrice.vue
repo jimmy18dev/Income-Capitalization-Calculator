@@ -7,6 +7,13 @@
         type="tel"
         :placeholder="placeholder"
         :value="value"
+        v-cleave="{
+          numeral: true,
+          numeralThousandsGroupStyle: 'thousand',
+          numeralPositiveOnly: true,
+          numeralDecimalScale: 0,
+          numeralIntegerScale: 8
+        }"
         @input="$emit('update:value', $event.target.value)"
       >
       <!-- v-cleave="{

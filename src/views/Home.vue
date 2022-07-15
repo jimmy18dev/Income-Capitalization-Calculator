@@ -4,33 +4,33 @@
     description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่"
     class="p-6"
   />
-  <div v-if="dataset.length" class="grid grid-cols-3 gap-6 mx-6 mb-6">
+  <div v-if="dataset.length" class="grid grid-cols-4 gap-6 mx-6 mb-6">
     <div v-for="(data, index) in dataset" :key="data.id" class="flex-1">
       <button v-if="!data.isActive" class="flex justify-center w-full px-6 py-4 border-2 border-dashed font-kanit-regular text-lg text-gray-500 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
-      <div v-else class=" shadow border p-6 rounded-lg">
-        <Section head="ราคาทรัพย์ที่เหมาะสม">
+      <div v-else class="shadow border p-5 rounded-lg">
+        <Section head="ราคาที่เหมาะสม">
           <InputPercentage
             v-model:value="data.capitalisationRate"
-            class="mb-4"
-            label="ผลตอบแทนที่ต้องการต่อปี"
+            class="mb-3"
+            label="ผลตอบแทนต่อปี"
             note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
             placeholder="0.0"
             unit="%"
           />
           <InputPrice
             v-model:value="data.expensesPerYear"
-            class="mb-4"
-            label="ค่าส่วนกลางต่อปี (ถ้ามี)"
+            class="mb-3"
+            label="ค่าส่วนกลางต่อปี"
             placeholder="0.00"
             unit="บาท"
           />
           <InputPrice
             v-model:value="data.rentPerMonth"
-            class="mb-4"
+            class="mb-3"
             label="ค่าเช่าต่อเดือน"
             placeholder="0.00"
             unit="บาท"
-            :note="`≈ ${toBaht(data.rentPerYear())} บาทต่อปี`"
+            :note="`${toBaht(data.rentPerYear())} บาท/ปี`"
           />
           <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
             <div class="flex-1">ราคาทรัพย์</div>
@@ -40,9 +40,8 @@
           </div>
         </Section>
         <Section
-          head="ราคาทรัพย์ที่เหมาะสม"
-          description="คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย"
-          note="สำหรับผู้ที่กู้ธนาคาร"
+          head="กระแสเงินสด"
+          note="*กู้ธนาคาร"
         >
           <div class="flex flex-col mb-4">
             <InputPrice
@@ -62,30 +61,28 @@
               unit="บาท"
             />
           </div>
-          <div class="flex pb-1">
+          <div class="flex items-baseline pb-1">
             <div class="flex-1">ผลตอบแทน:</div>
             <ResultPercentage
               :percentages="data.cashOnCashRentalYield()"
             />
           </div>
+          <div class="flex items-baseline pb-1">
+            <div class="flex-1">เงินสดต่อเดือน</div>
+            <ResultCashflow
+              :cashflow="data.cashflowPerMonth()"
+            />
+          </div>
           <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-            <div class="flex-1">กระแสเงินสด:</div>
-            <div class="flex flex-col">
-              <ResultCashflow
-                :cashflow="data.cashflowPerMonth()"
-                prefix="ต่อเดือน"
-              />
-              <ResultCashflow
-                :cashflow="data.cashflowPerYear()"
-                prefix="ต่อปี"
-              />
-            </div>
+            <div class="flex-1">เงินสดต่อเดือน</div>
+            <ResultCashflow
+              :cashflow="data.cashflowPerYear()"
+            />
           </div>
         </Section>
         <Section
-          head="ผลตอบแทนจากการให้เช่าสุทธิ"
-          description="เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย"
-          note="สำหรับเจ้าของซื้อเงินสด"
+          head="ผลตอบแทนสุทธิ"
+          note="*ซื้อเงินสด"
         >
           <div class="flex flex-col mb-4">
             <InputPrice
@@ -103,7 +100,7 @@
           </div>
         </Section>
       </div>
-      <button v-if="data.isActive && index !== 1" class="flex justify-center mt-6 w-full px-6 py-4 bg-gray-200 text-gray-500 font-kanit-regular text-lg rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
+      <button v-if="data.isActive && index !== 0" class="flex justify-center mt-6 w-full px-6 py-4 bg-gray-200 text-gray-500 font-kanit-regular text-lg rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
     </div>
   </div>
 </template>
@@ -141,12 +138,12 @@ export default defineComponent({
       dataset.push(new Capitalization({
         name: 'เปรียบเทียบ 1',
         rentPerMonth: 6500,
-        expensesPerYear: 12000,
-        capitalisationRate: 6.0,
-        installmentPerMonth: 7000,
+        expensesPerYear: 120000,
+        capitalisationRate: 96.5,
+        installmentPerMonth: 70000,
         additionalPropertyValue: 0,
         propertyPrice: 1200000,
-        isActive: false
+        isActive: true
       }))
       dataset.push(new Capitalization({
         name: 'เปรียบเทียบ 2',
@@ -166,7 +163,17 @@ export default defineComponent({
         installmentPerMonth: 7000,
         additionalPropertyValue: 0,
         propertyPrice: 1200000,
-        isActive: false
+        isActive: true
+      }))
+      dataset.push(new Capitalization({
+        name: 'เปรียบเทียบ 4',
+        rentPerMonth: 8500,
+        expensesPerYear: 14000,
+        capitalisationRate: 6.4,
+        installmentPerMonth: 7000,
+        additionalPropertyValue: 0,
+        propertyPrice: 1200000,
+        isActive: true
       }))
     }
 

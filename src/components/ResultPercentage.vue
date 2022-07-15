@@ -1,8 +1,10 @@
 <template>
-  <div v-if="percentages > 1000" class="flex justify-end items-baseline text-purple-700">
-    <div class="mr-2 text-gray-500">มากกว่า</div>
-    <div class="text-2xl">1,000</div>
-    <div class="ml-2">%</div>
+  <div
+    v-if="percentages > 1000"
+    class="flex justify-end items-baseline text-purple-700"
+  >
+    <div class="font-kanit-regular text-xl">+1,000</div>
+    <div class="w-9 text-right">%</div>
   </div>
   <div
     v-else
@@ -13,7 +15,7 @@
       'text-purple-700': percentages > 7
     }"
   >
-    <div class="font-kanit-regular text-2xl">{{ toPercentages(percentages) }}</div>
+    <div class="font-kanit-regular text-xl">{{ toPercentages(percentages) }}</div>
     <div class="w-9 text-right">%</div>
   </div>
 </template>

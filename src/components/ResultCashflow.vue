@@ -1,15 +1,14 @@
 <template>
   <div
-    class="flex justify-end items-baseline"
+    class="flex items-baseline"
     :class="{
       'text-red-700': cashflow <= 0,
       'text-green-600': cashflow > 0 && cashflow <= 10000,
       'text-purple-700': cashflow > 10000,
     }"
   >
-    <div v-if="prefix" class="mr-2 text-gray-500">{{ prefix }}</div>
-    <div class="font-kanit-regular text-xl w-36 text-right">{{ toBaht(cashflow) }}</div>
-    <div class="w-9 text-right">บาท</div>
+    <div class="font-kanit-medium flex-1 text-right text-3xl">{{ toBaht(cashflow, true) }}</div>
+    <div class="w-9 text-right font-kanit-regular">บาท</div>
   </div>
 </template>
 
@@ -21,7 +20,6 @@ export default defineComponent({
   name: 'ResultCashflow',
   props: {
     cashflow: Number,
-    prefix: String,
   },
   methods: {
     toBaht,

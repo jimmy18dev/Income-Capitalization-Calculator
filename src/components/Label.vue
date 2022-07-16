@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font-kanit-regular text-lg">
     <slot></slot>
   </div>
 </template>

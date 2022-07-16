@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col">
-    <div class="flex items-baseline">
-      <Label class="flex-1">{{ label }}</Label>
+    <Label class="flex-1">{{ label }}</Label>
+    <div class="flex relative">
       <input
-        class="font-kanit-regular text-lg text-right w-20 bg-transparent outline-none border-b border-gray-300 focus:border-gray-600"
+        class="font-kanit-regular text-3xl leading-none text-right w-full bg-transparent outline-none border-b border-gray-200 focus:border-gray-600 pr-9"
         type="tel"
         :placeholder="placeholder"
         :value="value"
@@ -12,13 +12,13 @@
           numeralThousandsGroupStyle: 'thousand',
           numeralPositiveOnly: true,
           numeralDecimalScale: 0,
-          numeralIntegerScale: 8
+          numeralIntegerScale: 8,
         }"
           @input="$emit('update:value', $event.target.value)"
         >
-        <div class="w-9 flex items-center justify-end">{{ unit }}</div>
+        <div class="absolute inset-y-0 right-0 font-kanit-regular w-9 pb-2 flex justify-end items-end">{{ unit }}</div>
     </div>
-    <div v-if="note" class="text-xs mt-1 text-gray-500 text-right">{{ note }}</div>
+    <div v-if="note" class="text-sm font-kanit-regular mt-1 text-gray-400 text-right">{{ note }}</div>
   </div>
 </template>
 

@@ -3,8 +3,8 @@
     class="flex items-baseline"
     :class="{
       'text-red-700': price <= 0,
-      'text-purple-700': price > 0 && price <= 2000000,
-      'text-green-600': price > 2000000,
+      'text-purple-800': price > 0 && price <= 2000000,
+      'text-emerald-600': price > 2000000,
     }"
   >
     <div class="font-kanit-medium flex-1 text-right text-2xl">{{ toBaht(price) }}</div>

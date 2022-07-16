@@ -3,8 +3,8 @@
     class="flex items-baseline"
     :class="{
       'text-red-700': percentages < 0,
-      'text-green-600': percentages > 0 && percentages <= 7,
-      'text-purple-700': percentages > 7
+      'text-emerald-600': percentages > 0 && percentages <= 7,
+      'text-purple-800': percentages > 7
     }"
   >
     <div v-if="percentages >= 1000" class="font-kanit-medium flex-1 text-right text-2xl">+1000</div>

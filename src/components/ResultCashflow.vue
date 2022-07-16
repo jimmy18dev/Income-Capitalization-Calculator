@@ -3,8 +3,8 @@
     class="flex items-baseline"
     :class="{
       'text-red-700': cashflow <= 0,
-      'text-green-600': cashflow > 0 && cashflow <= 10000,
-      'text-purple-700': cashflow > 10000,
+      'text-emerald-600': cashflow > 0 && cashflow <= 10000,
+      'text-purple-800': cashflow > 10000,
     }"
   >
     <div class="font-kanit-medium flex-1 text-right text-2xl">{{ toBaht(cashflow, true) }}</div>

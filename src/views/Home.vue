@@ -2,24 +2,28 @@
   <Header
     head="ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า"
     description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่"
-    class="w-1/2 mx-auto my-16"
   />
-  <div v-if="dataset.length" class="flex flex-col w-1/2 mx-auto mb-20">
-    <Section>
+  <div v-if="dataset.length" class="flex flex-col mb-12">
+    <Section class="hidden">
       <div v-for="(data, index) in dataset" :key="data.id" class="ml-5 flex-1">
         <div v-if="index === 0" class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-500">เริ่มต้น</div>
-        <button v-else-if="!data.isActive" class="flex justify-center w-full px-6 py-2 bg-purple-50 font-kanit-regular text-lg text-purple-700 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
+        <button v-else-if="!data.isActive" class="flex justify-center w-full px-6 py-2 bg-purple-50 font-kanit-regular text-lg text-purple-800 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
         <button v-else class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-400 bg-gray-100 rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
       </div>
     </Section>
-    <div class="flex border-b mb-5 pb-2">
-      <h2 class="text-2xl">ราคาที่เหมาะสม</h2>
-    </div>
+
+    <Topic>ราคาที่เหมาะสม</Topic>
     <Section
       head="ผลตอบแทนต่อปี"
       description="ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
     >
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPercentage
           v-model:value="data.capitalisationRate"
           placeholder="0.0"
@@ -28,7 +32,13 @@
       </div>
     </Section>
     <Section head="ค่าส่วนกลางต่อปี">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.expensesPerYear"
           placeholder="0.00"
@@ -37,7 +47,13 @@
       </div>
     </Section>
     <Section head="ค่าเช่าต่อเดือน">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.rentPerMonth"
           placeholder="0.00"
@@ -46,20 +62,30 @@
         />
       </div>
     </Section>
-    <Section head="ราคาทรัพย์" class="mb-8">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+    <Section head="ราคาทรัพย์" class="mb-6">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <ResultPrice :price="data.propertyValue()" />
       </div>
     </Section>
 
-    <div class="flex border-b mb-5 pb-2">
-      <h2 class="text-2xl">กระแสเงินสด</h2>
-    </div>
+    <Topic>กระแสเงินสด</Topic>
     <Section
       head="ต้นทุนเพิ่มเติม"
       description="เงินจอง, เงินดาวน์, ค่ารีโนเวท"
     >
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.additionalPropertyValue"
           label="ต้นทุนเพิ่มเติม"
@@ -70,7 +96,13 @@
       </div>
     </Section>
     <Section head="ผ่อนธนาคารต่อเดือน">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.installmentPerMonth"
           label="ผ่อนธนาคารต่อเดือน"
@@ -82,26 +114,48 @@
       </div>
     </Section>
     <Section head="ผลตอบแทน">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <ResultPercentage :percentages="data.cashOnCashRentalYield()" />
       </div>
     </Section>
     <Section head="เงินสดต่อเดือน">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <ResultCashflow :cashflow="data.cashflowPerMonth()" />
       </div>
     </Section>
-    <Section head="เงินสดต่อปี" class="mb-8">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+    <Section head="เงินสดต่อปี" class="mb-6">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <ResultCashflow :cashflow="data.cashflowPerYear()" />
       </div>
     </Section>
 
-    <div class="flex border-b mb-5 pb-2">
-      <h2 class="text-2xl">ผลตอบแทนสุทธิ</h2>
-    </div>
+    <Topic>ผลตอบแทนสุทธิ</Topic>
     <Section head="ราคาทรัพย์">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.propertyPrice"
           label="ราคาทรัพย์"
@@ -112,7 +166,13 @@
       </div>
     </Section>
     <Section head="ผลตอบแทน">
-      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <ResultPercentage :percentages="data.netRentalYield()" />
       </div>
     </Section>
@@ -122,6 +182,7 @@
 <script lang="ts">
 import { reactive, onMounted, defineComponent, watch, ref } from 'vue'
 import { toBaht } from '../utils/currency'
+import { useCapitalizationStore } from '../store/capitalization'
 import Header from '../components/Header.vue'
 import InputPrice from '../components/InputPrice.vue'
 import Section from '../components/Section.vue'
@@ -131,8 +192,7 @@ import ResultCashflow from '../components/ResultCashflow.vue'
 import ResultPrice from '../components/ResultPrice.vue'
 import Capitalization from '../models/capitalization'
 import Label from '../components/Label.vue'
-
-import { useCapitalizationStore } from '../store/capitalization'
+import Topic from '../components/Topic.vue'
 
 export default defineComponent({
   name: 'Home',
@@ -145,6 +205,7 @@ export default defineComponent({
     ResultCashflow,
     ResultPrice,
     Label,
+    Topic,
   },
   setup () {
     const currentTabIndex = ref(0)
@@ -156,9 +217,9 @@ export default defineComponent({
         name: 'เปรียบเทียบ 1',
         rentPerMonth: 6500,
         expensesPerYear: 12000,
-        capitalisationRate: 6,
-        installmentPerMonth: 70000,
-        additionalPropertyValue: 0,
+        capitalisationRate: 5.9,
+        installmentPerMonth: 7000,
+        additionalPropertyValue: 10000,
         propertyPrice: 1200000,
         isActive: true
       }))
@@ -166,20 +227,20 @@ export default defineComponent({
         name: 'เปรียบเทียบ 2',
         rentPerMonth: 6500,
         expensesPerYear: 12000,
-        capitalisationRate: 7,
+        capitalisationRate: 7.2,
         installmentPerMonth: 7000,
-        additionalPropertyValue: 0,
-        propertyPrice: 1200000,
+        additionalPropertyValue: 20000,
+        propertyPrice: 1500000,
         isActive: false
       }))
       dataset.push(new Capitalization({
         name: 'เปรียบเทียบ 3',
         rentPerMonth: 6500,
         expensesPerYear: 12000,
-        capitalisationRate: 8,
+        capitalisationRate: 8.5,
         installmentPerMonth: 7000,
-        additionalPropertyValue: 0,
-        propertyPrice: 1200000,
+        additionalPropertyValue: 50000,
+        propertyPrice: 2200000,
         isActive: false
       }))
     }

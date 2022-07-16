@@ -4,72 +4,73 @@
     description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่"
     class="w-1/2 mx-auto my-16"
   />
-  <div v-if="dataset.length" class="grid grid-cols-3 gap-10 w-1/2 mx-auto border-b mb-5 pb-3 items-center">
-    <div v-for="(data, index) in dataset" :key="data.id" class="flex-1">
-      <h2 v-if="index === 0" class="text-2xl">ราคาที่เหมาะสม</h2>
-      <button v-else-if="!data.isActive" class="flex justify-center w-full px-6 py-2 bg-purple-50 font-kanit-regular text-lg text-purple-700 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
-      <button v-else class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-400 bg-gray-100 rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
+  <div v-if="dataset.length" class="flex flex-col w-1/2 mx-auto mb-20">
+    <Section>
+      <div v-for="(data, index) in dataset" :key="data.id" class="ml-5 flex-1">
+        <div v-if="index === 0" class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-500">เริ่มต้น</div>
+        <button v-else-if="!data.isActive" class="flex justify-center w-full px-6 py-2 bg-purple-50 font-kanit-regular text-lg text-purple-700 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
+        <button v-else class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-400 bg-gray-100 rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
+      </div>
+    </Section>
+    <div class="flex border-b mb-5 pb-2">
+      <h2 class="text-2xl">ราคาที่เหมาะสม</h2>
     </div>
-  </div>
-
-  <div v-if="dataset.length" class="flex flex-col w-1/2 mx-auto mb-12">
-    <div class="grid grid-cols-3 gap-10">
-      <div
-        v-for="(data) in dataset"
-        class="flex flex-col flex-1 relative"
-        :key="data.id"
-      >
-        <div v-if="!data.isActive" class="bg-white bg-opacity-90 absolute inset-0 z-10"></div>
+    <Section
+      head="ผลตอบแทนต่อปี"
+      description="ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
+    >
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
         <InputPercentage
           v-model:value="data.capitalisationRate"
-          class="mb-5"
-          label="ผลตอบแทนต่อปี"
-          note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
           placeholder="0.0"
           unit="%"
         />
+      </div>
+    </Section>
+    <Section head="ค่าส่วนกลางต่อปี">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
         <InputPrice
           v-model:value="data.expensesPerYear"
-          class="mb-5"
-          label="ค่าส่วนกลางต่อปี"
           placeholder="0.00"
           unit="บาท"
         />
+      </div>
+    </Section>
+    <Section head="ค่าเช่าต่อเดือน">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
         <InputPrice
           v-model:value="data.rentPerMonth"
-          class="mb-5"
-          label="ค่าเช่าต่อเดือน"
           placeholder="0.00"
           unit="บาท"
           :note="`${toBaht(data.rentPerYear())} บาท/ปี`"
         />
-        <div class="flex flex-col border-b-4 border-double pb-1">
-          <div class="flex-1 font-kanit-regular">ราคาทรัพย์</div>
-          <ResultPrice :price="data.propertyValue()" />
-        </div>
       </div>
-    </div>
-  </div>
+    </Section>
+    <Section head="ราคาทรัพย์" class="mb-8">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+        <ResultPrice :price="data.propertyValue()" />
+      </div>
+    </Section>
 
-  <div v-if="dataset.length" class="flex flex-col w-1/2 mx-auto mb-12">
-    <div class="flex border-b mb-5 pb-3">
+    <div class="flex border-b mb-5 pb-2">
       <h2 class="text-2xl">กระแสเงินสด</h2>
     </div>
-    <div class="grid grid-cols-3 gap-10">
-      <div
-        v-for="(data) in dataset"
-        class="flex flex-col flex-1 relative"
-        :key="data.id"
-      >
-        <div v-if="!data.isActive" class="bg-white bg-opacity-90 absolute inset-0 z-10"></div>
+    <Section
+      head="ต้นทุนเพิ่มเติม"
+      description="เงินจอง, เงินดาวน์, ค่ารีโนเวท"
+    >
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
         <InputPrice
           v-model:value="data.additionalPropertyValue"
           label="ต้นทุนเพิ่มเติม"
           placeholder="0.00"
-          note="เงินจอง, เงินดาวน์, ค่ารีโนเวท"
           unit="บาท"
           class="mb-5"
         />
+      </div>
+    </Section>
+    <Section head="ผ่อนธนาคารต่อเดือน">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
         <InputPrice
           v-model:value="data.installmentPerMonth"
           label="ผ่อนธนาคารต่อเดือน"
@@ -78,33 +79,29 @@
           class="mb-5"
           :note="`${toBaht(data.installmentPerYear())} บาท/ปี`"
         />
-        <div class="flex flex-col mb-5">
-          <Label>ผลตอบแทน</Label>
-          <ResultPercentage :percentages="data.cashOnCashRentalYield()" />
-        </div>
-        <div class="flex flex-col mb-5">
-          <Label>เงินสดต่อเดือน</Label>
-          <ResultCashflow :cashflow="data.cashflowPerMonth()" />
-        </div>
-        <div class="flex flex-col border-b-4 border-double pb-1">
-          <Label>เงินสดต่อปี</Label>
-          <ResultCashflow :cashflow="data.cashflowPerYear()" />
-        </div>
       </div>
-    </div>
-  </div>
+    </Section>
+    <Section head="ผลตอบแทน">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+        <ResultPercentage :percentages="data.cashOnCashRentalYield()" />
+      </div>
+    </Section>
+    <Section head="เงินสดต่อเดือน">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+        <ResultCashflow :cashflow="data.cashflowPerMonth()" />
+      </div>
+    </Section>
+    <Section head="เงินสดต่อปี" class="mb-8">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+        <ResultCashflow :cashflow="data.cashflowPerYear()" />
+      </div>
+    </Section>
 
-  <div v-if="dataset.length" class="flex flex-col w-1/2 mx-auto mb-20">
-    <div class="flex border-b mb-5 pb-3">
+    <div class="flex border-b mb-5 pb-2">
       <h2 class="text-2xl">ผลตอบแทนสุทธิ</h2>
     </div>
-    <div class="grid grid-cols-3 gap-10">
-      <div
-        v-for="(data) in dataset"
-        class="flex flex-col flex-1 relative"
-        :key="data.id"
-      >
-        <div v-if="!data.isActive" class="bg-white bg-opacity-90 absolute inset-0 z-10"></div>
+    <Section head="ราคาทรัพย์">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
         <InputPrice
           v-model:value="data.propertyPrice"
           label="ราคาทรัพย์"
@@ -112,12 +109,13 @@
           unit="บาท"
           class="mb-5"
         />
-        <div class="flex flex-col border-b-4 border-double pb-1">
-          <Label>ผลตอบแทน</Label>
-          <ResultPercentage :percentages="data.netRentalYield()" />
-        </div>
       </div>
-    </div>
+    </Section>
+    <Section head="ผลตอบแทน">
+      <div v-for="data in dataset" :key="data.id" class="ml-5 flex-1">
+        <ResultPercentage :percentages="data.netRentalYield()" />
+      </div>
+    </Section>
   </div>
 </template>
 

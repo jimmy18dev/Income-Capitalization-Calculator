@@ -7,7 +7,7 @@
       'text-green-600': price > 2000000,
     }"
   >
-    <div class="font-kanit-medium flex-1 text-right text-3xl">{{ toBaht(price) }}</div>
+    <div class="font-kanit-medium flex-1 text-right text-2xl">{{ toBaht(price) }}</div>
     <div class="w-9 text-right font-kanit-regular">บาท</div>
   </div>
 </template>

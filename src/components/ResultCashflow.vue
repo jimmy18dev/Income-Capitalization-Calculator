@@ -7,7 +7,7 @@
       'text-purple-700': cashflow > 10000,
     }"
   >
-    <div class="font-kanit-medium flex-1 text-right text-3xl">{{ toBaht(cashflow, true) }}</div>
+    <div class="font-kanit-medium flex-1 text-right text-2xl">{{ toBaht(cashflow, true) }}</div>
     <div class="w-9 text-right font-kanit-regular">บาท</div>
   </div>
 </template>

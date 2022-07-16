@@ -1,25 +1,25 @@
 <template>
-  <div class="flex flex-col mb-4">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl">{{ head }}</h2>
-      <div v-if="note" class="text-xs text-gray-500">{{ note }}</div>
+  <div class="flex items-baseline mb-4">
+    <div class="flex flex-col flex-1">
+      <Label>{{ head }}</Label>
+      <div v-if="description" class="text-xs text-gray-500">{{ description }}</div>
     </div>
-    <p v-if="description" class="mb-3">{{ description }}</p>
-    <div class="flex flex-col">
-      <slot></slot>
-    </div>
+    <slot></slot>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Label from './Label.vue'
 
 export default defineComponent({
   name: 'Section',
+  components: {
+    Label,
+  },
   props: {
     head: String,
     description: String,
-    note: String,
   },
 })
 </script>

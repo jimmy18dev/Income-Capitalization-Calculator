@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <div class="flex relative">
       <input
-        class="font-kanit-regular text-2xl leading-none text-right w-full bg-transparent outline-none border-b border-dotted border-gray-200 focus:border-gray-600 pr-9"
+        class="font-kanit-regular text-2xl leading-none text-right w-full bg-transparent outline-none border-b border-dotted border-gray-300 focus:border-gray-700 rounded-none pr-10"
         type="tel"
         placeholder="0.00"
         v-cleave="{
@@ -15,9 +15,9 @@
         :value="value"
         @input="onInputChange"
       >
-      <div class="absolute inset-y-0 right-0 font-kanit-regular w-9 pb-1 flex justify-end items-end">บาท</div>
+      <div class="absolute inset-y-0 right-0 font-kanit-regular w-10 pb-1 flex text-xl justify-end items-end">บาท</div>
     </div>
-    <div v-if="note" class="text-sm font-kanit-regular mt-1 text-gray-400 text-right">{{ note }}</div>
+    <div v-if="note" class="text-sm font-kanit-regular mt-1 text-gray-700 text-right">{{ note }}</div>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex border-b mx-6 mb-3 pb-3">
-    <h2 class="text-2xl"><slot></slot></h2>
+  <div class="flex border-b border-gray-500 mx-5 mb-4 pb-1">
+    <h2 class="text-2xl text-gray-900"><slot></slot></h2>
   </div>
 </template>
 

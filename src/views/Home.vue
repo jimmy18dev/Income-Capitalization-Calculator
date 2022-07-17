@@ -3,7 +3,7 @@
     head="ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า"
     description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่"
   />
-  <div v-if="dataset.length" class="flex flex-col mb-12">
+  <div v-if="dataset.length" class="flex flex-col">
     <Section class="hidden">
       <div v-for="(data, index) in dataset" :key="data.id" class="ml-5 flex-1">
         <div v-if="index === 0" class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-500">เริ่มต้น</div>
@@ -19,7 +19,7 @@
     >
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -32,7 +32,7 @@
     <Section head="ค่าส่วนกลางต่อปี">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -45,7 +45,7 @@
     <Section head="ค่าเช่าต่อเดือน">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -59,7 +59,7 @@
     <Section head="ราคาทรัพย์" class="mb-6">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -75,7 +75,7 @@
     >
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -88,7 +88,7 @@
     <Section head="ผ่อนธนาคารต่อเดือน">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -102,7 +102,7 @@
     <Section head="ผลตอบแทน">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -113,7 +113,7 @@
     <Section head="เงินสดต่อเดือน">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -121,10 +121,10 @@
         <ResultCashflow :cashflow="data.cashflowPerMonth()" />
       </div>
     </Section>
-    <Section head="เงินสดต่อปี" class="mb-6">
+    <Section head="เงินสดต่อปี">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -133,11 +133,11 @@
       </div>
     </Section>
 
-    <Topic>ผลตอบแทนสุทธิ</Topic>
+    <!-- <Topic>ผลตอบแทนสุทธิ</Topic>
     <Section head="ราคาทรัพย์">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
@@ -150,15 +150,16 @@
     <Section head="ผลตอบแทน">
       <div
         v-for="(data, index) in dataset"
-        class="ml-5 flex-1 relative"
+        class="ml-4 flex-1 relative"
         :class="{'hidden md:flex': index > 0}"
         :key="data.id"
       >
         <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <ResultPercentage :percentages="data.netRentalYield()" />
       </div>
-    </Section>
+    </Section> -->
   </div>
+  <div class="m-5 text-sm font-kanit-regular text-gray-700">เวอร์ชั่น: {{ version }}</div>
 </template>
 
 <script lang="ts">
@@ -193,6 +194,7 @@ export default defineComponent({
     const currentTabIndex = ref(0)
     const dataset = reactive([] as Capitalization[])
     const capitalizationStore = useCapitalizationStore()
+    const version = import.meta.env.VITE_APP_VERSION
     
     const init = async (): Promise<void> => {
       dataset.push(new Capitalization({
@@ -237,6 +239,7 @@ export default defineComponent({
       dataset,
       currentTabIndex,
       capitalizationStore,
+      version,
     }
   },
   methods: {

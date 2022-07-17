@@ -8,7 +8,7 @@
     }"
   >
     <div class="font-kanit-medium flex-1 text-right text-2xl">{{ toBaht(price) }}</div>
-    <div class="w-9 text-right font-kanit-regular">บาท</div>
+    <div class="w-10 text-xl text-right font-kanit-regular">บาท</div>
   </div>
 </template>
 

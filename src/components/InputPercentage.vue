@@ -2,8 +2,8 @@
   <div class="flex flex-col">
     <div class="flex relative">
       <input
-      class="font-kanit-regular text-2xl leading-none text-right w-full bg-transparent outline-none border-b border-dotted border-gray-200 focus:border-gray-600 pr-9"
-        type="tel"
+      class="font-kanit-regular text-2xl leading-none text-right w-full bg-transparent outline-none border-b border-dotted border-gray-200 focus:border-gray-600 pr-10 rounded-none"
+        type="text"
         placeholder="0.0"
         v-cleave="{
           numeral: true,
@@ -14,7 +14,7 @@
         :value="value"
         @input="onInputChange"
       >
-      <div class="absolute inset-y-0 right-0 font-kanit-regular w-8 pl-1 pb-1 flex items-end">%</div>
+      <div class="absolute inset-y-0 right-0 font-kanit-regular text-xl w-10 pl-2 pb-1 flex items-end">%</div>
     </div>
   </div>
 </template>

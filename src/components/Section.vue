@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-baseline mx-6 mb-3">
+  <div class="flex items-baseline mx-5 mb-4">
     <div class="flex flex-col flex-1">
       <Label>{{ head }}</Label>
-      <div v-if="description" class="text-sm font-kanit-regular text-gray-400">{{ description }}</div>
+      <div v-if="description" class="text-sm mt-1 font-kanit-regular text-gray-700">{{ description }}</div>
     </div>
     <slot></slot>
   </div>

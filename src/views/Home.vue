@@ -132,38 +132,12 @@
         <ResultCashflow :cashflow="data.cashflowPerYear()" />
       </div>
     </Section>
-
-    <!-- <Topic>ผลตอบแทนสุทธิ</Topic>
-    <Section head="ราคาทรัพย์">
-      <div
-        v-for="(data, index) in dataset"
-        class="ml-4 flex-1 relative"
-        :class="{'hidden md:flex': index > 0}"
-        :key="data.id"
-      >
-        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
-        <InputPrice
-          v-model:value="data.propertyPrice"
-        />
-      </div>
-    </Section>
-    <Section head="ผลตอบแทน">
-      <div
-        v-for="(data, index) in dataset"
-        class="ml-4 flex-1 relative"
-        :class="{'hidden md:flex': index > 0}"
-        :key="data.id"
-      >
-        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
-        <ResultPercentage :percentages="data.netRentalYield()" />
-      </div>
-    </Section> -->
   </div>
-  <div class="m-5 text-sm font-kanit-regular text-gray-700">เวอร์ชั่น: {{ version }}</div>
+  <Footer />
 </template>
 
 <script lang="ts">
-import { reactive, onMounted, defineComponent, watch, ref } from 'vue'
+import { reactive, onMounted, defineComponent, ref } from 'vue'
 import { toBaht } from '../utils/currency'
 import { useCapitalizationStore } from '../store/capitalization'
 import Header from '../components/Header.vue'
@@ -176,11 +150,13 @@ import ResultPrice from '../components/ResultPrice.vue'
 import Capitalization from '../models/capitalization'
 import Label from '../components/Label.vue'
 import Topic from '../components/Topic.vue'
+import Footer from '../components/Footer.vue'
 
 export default defineComponent({
   name: 'Home',
   components: {
     Header,
+    Footer,
     Section,
     InputPrice,
     InputPercentage,
@@ -194,7 +170,6 @@ export default defineComponent({
     const currentTabIndex = ref(0)
     const dataset = reactive([] as Capitalization[])
     const capitalizationStore = useCapitalizationStore()
-    const version = import.meta.env.VITE_APP_VERSION
     
     const init = async (): Promise<void> => {
       dataset.push(new Capitalization({
@@ -231,15 +206,10 @@ export default defineComponent({
 
     onMounted(init)
 
-    // watch(() => capitalization, () => {
-    //   capitalizationStore.save(capitalization)
-    // }, { deep: true })
-
     return {
       dataset,
       currentTabIndex,
       capitalizationStore,
-      version,
     }
   },
   methods: {

@@ -4,8 +4,7 @@
       <input
         class="font-kanit-regular text-2xl leading-none text-right w-full bg-transparent outline-none border-b border-dotted border-gray-200 focus:border-gray-600 pr-9"
         type="tel"
-        :placeholder="placeholder"
-        :value="value"
+        placeholder="0.00"
         v-cleave="{
           numeral: true,
           numeralThousandsGroupStyle: 'thousand',
@@ -13,9 +12,10 @@
           numeralDecimalScale: 0,
           numeralIntegerScale: 8,
         }"
-          @input="$emit('update:value', $event.target.value)"
-        >
-        <div class="absolute inset-y-0 right-0 font-kanit-regular w-9 pb-1 flex justify-end items-end">{{ unit }}</div>
+        :value="value"
+        @input="onInputChange"
+      >
+      <div class="absolute inset-y-0 right-0 font-kanit-regular w-9 pb-1 flex justify-end items-end">บาท</div>
     </div>
     <div v-if="note" class="text-sm font-kanit-regular mt-1 text-gray-400 text-right">{{ note }}</div>
   </div>
@@ -31,12 +31,17 @@ export default defineComponent({
     Label,
   },
   props: {
-    value: String,
-    label: String,
-    unit: String,
+    value: [String, Number],
     note: String,
-    placeholder: String
   },
-  emits: ['update:value']
+  emits: ['update:value'],
+  setup (_, { emit }) {
+    const onInputChange = (e: any): void => {
+      emit('update:value', e.target.value)
+    }
+    return {
+      onInputChange,
+    }
+  },
 })
 </script>

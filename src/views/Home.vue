@@ -26,8 +26,6 @@
         <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPercentage
           v-model:value="data.capitalisationRate"
-          placeholder="0.0"
-          unit="%"
         />
       </div>
     </Section>
@@ -41,8 +39,6 @@
         <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.expensesPerYear"
-          placeholder="0.00"
-          unit="บาท"
         />
       </div>
     </Section>
@@ -56,8 +52,6 @@
         <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.rentPerMonth"
-          placeholder="0.00"
-          unit="บาท"
           :note="`${toBaht(data.rentPerYear())} บาท/ปี`"
         />
       </div>
@@ -88,10 +82,6 @@
         <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.additionalPropertyValue"
-          label="ต้นทุนเพิ่มเติม"
-          placeholder="0.00"
-          unit="บาท"
-          class="mb-5"
         />
       </div>
     </Section>
@@ -105,10 +95,6 @@
         <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.installmentPerMonth"
-          label="ผ่อนธนาคารต่อเดือน"
-          placeholder="0.00"
-          unit="บาท"
-          class="mb-5"
           :note="`${toBaht(data.installmentPerYear())} บาท/ปี`"
         />
       </div>
@@ -158,10 +144,6 @@
         <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
         <InputPrice
           v-model:value="data.propertyPrice"
-          label="ราคาทรัพย์"
-          placeholder="0.00"
-          unit="บาท"
-          class="mb-5"
         />
       </div>
     </Section>

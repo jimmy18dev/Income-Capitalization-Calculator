@@ -2,115 +2,187 @@
   <Header
     head="ราคาทรัพย์กับการลงทุนเพื่อปล่อยเช่า"
     description="ห้องที่กำลังจะตัดสินใจซื้อคุ้มค่ากับการลงทุนเพื่อปล่อยเช่าหรือไม่"
-    class="p-6"
   />
-  <div v-if="dataset.length" class="grid grid-cols-3 gap-6 mx-6 mb-6">
-    <div v-for="(data, index) in dataset" :key="data.id" class="flex-1">
-      <button v-if="!data.isActive" class="flex justify-center w-full px-6 py-4 border-2 border-dashed font-kanit-regular text-lg text-gray-500 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
-      <div v-else class=" shadow border p-6 rounded-lg">
-        <Section head="ราคาทรัพย์ที่เหมาะสม">
-          <InputPercentage
-            v-model:value="data.capitalisationRate"
-            class="mb-4"
-            label="ผลตอบแทนที่ต้องการต่อปี"
-            note="*ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
-            placeholder="0.0"
-            unit="%"
-          />
-          <InputPrice
-            v-model:value="data.expensesPerYear"
-            class="mb-4"
-            label="ค่าส่วนกลางต่อปี (ถ้ามี)"
-            placeholder="0.00"
-            unit="บาท"
-          />
-          <InputPrice
-            v-model:value="data.rentPerMonth"
-            class="mb-4"
-            label="ค่าเช่าต่อเดือน"
-            placeholder="0.00"
-            unit="บาท"
-            :note="`≈ ${toBaht(data.rentPerYear())} บาทต่อปี`"
-          />
-          <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-            <div class="flex-1">ราคาทรัพย์</div>
-            <ResultPrice
-              :price="data.propertyValue()"
-            />
-          </div>
-        </Section>
-        <Section
-          head="ราคาทรัพย์ที่เหมาะสม"
-          description="คำนวณจากค่าส่วนกลางต่อปีและค่าเช่าต่อเดือน จากฟอร์มด้านบนด้วย"
-          note="สำหรับผู้ที่กู้ธนาคาร"
-        >
-          <div class="flex flex-col mb-4">
-            <InputPrice
-              v-model:value="data.installmentPerMonth"
-              label="ผ่อนธนาคารต่อเดือน"
-              placeholder="0.00"
-              unit="บาท"
-              :note="`≈ ${toBaht(data.installmentPerYear())} บาทต่อปี`"
-            />
-          </div>
-          <div class="flex flex-col mb-4">
-            <InputPrice
-              v-model:value="data.additionalPropertyValue"
-              label="ต้นทุนเพิ่มเติม"
-              placeholder="0.00"
-              note="เช่น เงินจอง, เงินดาวน์, ค่ารีโนเวท, ค่าเฟอร์นิเจอร์"
-              unit="บาท"
-            />
-          </div>
-          <div class="flex pb-1">
-            <div class="flex-1">ผลตอบแทน:</div>
-            <ResultPercentage
-              :percentages="data.cashOnCashRentalYield()"
-            />
-          </div>
-          <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-            <div class="flex-1">กระแสเงินสด:</div>
-            <div class="flex flex-col">
-              <ResultCashflow
-                :cashflow="data.cashflowPerMonth()"
-                prefix="ต่อเดือน"
-              />
-              <ResultCashflow
-                :cashflow="data.cashflowPerYear()"
-                prefix="ต่อปี"
-              />
-            </div>
-          </div>
-        </Section>
-        <Section
-          head="ผลตอบแทนจากการให้เช่าสุทธิ"
-          description="เหมาะกับเจ้าของห้องที่ซื้อคอนโดเงินสด (ไม่ได้กู้ธนาคาร) คำนวณจากต้นทุนเพิ่มเติม จากฟอร์มด้านบนด้วย"
-          note="สำหรับเจ้าของซื้อเงินสด"
-        >
-          <div class="flex flex-col mb-4">
-            <InputPrice
-              v-model:value="data.propertyPrice"
-              label="ราคาทรัพย์"
-              placeholder="0.00"
-              unit="บาท"
-            />
-          </div>
-          <div class="flex items-baseline border-double border-b-4 border-gray-300 pb-1">
-            <div class="flex-1">ผลตอบแทน:</div>
-            <ResultPercentage
-              :percentages="data.netRentalYield()"
-            />
-          </div>
-        </Section>
+  <div v-if="dataset.length" class="flex flex-col mb-12">
+    <Section class="hidden">
+      <div v-for="(data, index) in dataset" :key="data.id" class="ml-5 flex-1">
+        <div v-if="index === 0" class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-500">เริ่มต้น</div>
+        <button v-else-if="!data.isActive" class="flex justify-center w-full px-6 py-2 bg-purple-50 font-kanit-regular text-lg text-purple-800 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
+        <button v-else class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-400 bg-gray-100 rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
       </div>
-      <button v-if="data.isActive && index !== 1" class="flex justify-center mt-6 w-full px-6 py-4 bg-gray-200 text-gray-500 font-kanit-regular text-lg rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
-    </div>
+    </Section>
+
+    <Topic>ราคาที่เหมาะสม</Topic>
+    <Section
+      head="ผลตอบแทนต่อปี"
+      description="ไม่ควรต่ำกว่าดอกเบี้ยสินเชื่อบ้าน-คอนโด (MRR)"
+    >
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <InputPercentage
+          v-model:value="data.capitalisationRate"
+          placeholder="0.0"
+          unit="%"
+        />
+      </div>
+    </Section>
+    <Section head="ค่าส่วนกลางต่อปี">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <InputPrice
+          v-model:value="data.expensesPerYear"
+          placeholder="0.00"
+          unit="บาท"
+        />
+      </div>
+    </Section>
+    <Section head="ค่าเช่าต่อเดือน">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <InputPrice
+          v-model:value="data.rentPerMonth"
+          placeholder="0.00"
+          unit="บาท"
+          :note="`${toBaht(data.rentPerYear())} บาท/ปี`"
+        />
+      </div>
+    </Section>
+    <Section head="ราคาทรัพย์" class="mb-6">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <ResultPrice :price="data.propertyValue()" />
+      </div>
+    </Section>
+
+    <Topic>กระแสเงินสด</Topic>
+    <Section
+      head="ต้นทุนเพิ่มเติม"
+      description="เงินจอง, เงินดาวน์, ค่ารีโนเวท"
+    >
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <InputPrice
+          v-model:value="data.additionalPropertyValue"
+          label="ต้นทุนเพิ่มเติม"
+          placeholder="0.00"
+          unit="บาท"
+          class="mb-5"
+        />
+      </div>
+    </Section>
+    <Section head="ผ่อนธนาคารต่อเดือน">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <InputPrice
+          v-model:value="data.installmentPerMonth"
+          label="ผ่อนธนาคารต่อเดือน"
+          placeholder="0.00"
+          unit="บาท"
+          class="mb-5"
+          :note="`${toBaht(data.installmentPerYear())} บาท/ปี`"
+        />
+      </div>
+    </Section>
+    <Section head="ผลตอบแทน">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <ResultPercentage :percentages="data.cashOnCashRentalYield()" />
+      </div>
+    </Section>
+    <Section head="เงินสดต่อเดือน">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <ResultCashflow :cashflow="data.cashflowPerMonth()" />
+      </div>
+    </Section>
+    <Section head="เงินสดต่อปี" class="mb-6">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <ResultCashflow :cashflow="data.cashflowPerYear()" />
+      </div>
+    </Section>
+
+    <Topic>ผลตอบแทนสุทธิ</Topic>
+    <Section head="ราคาทรัพย์">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <InputPrice
+          v-model:value="data.propertyPrice"
+          label="ราคาทรัพย์"
+          placeholder="0.00"
+          unit="บาท"
+          class="mb-5"
+        />
+      </div>
+    </Section>
+    <Section head="ผลตอบแทน">
+      <div
+        v-for="(data, index) in dataset"
+        class="ml-5 flex-1 relative"
+        :class="{'hidden md:flex': index > 0}"
+        :key="data.id"
+      >
+        <div v-if="!data.isActive" class="absolute inset-0 bg-white bg-opacity-80 z-10"></div>
+        <ResultPercentage :percentages="data.netRentalYield()" />
+      </div>
+    </Section>
   </div>
 </template>
 
 <script lang="ts">
 import { reactive, onMounted, defineComponent, watch, ref } from 'vue'
 import { toBaht } from '../utils/currency'
+import { useCapitalizationStore } from '../store/capitalization'
 import Header from '../components/Header.vue'
 import InputPrice from '../components/InputPrice.vue'
 import Section from '../components/Section.vue'
@@ -119,7 +191,8 @@ import ResultPercentage from '../components/ResultPercentage.vue'
 import ResultCashflow from '../components/ResultCashflow.vue'
 import ResultPrice from '../components/ResultPrice.vue'
 import Capitalization from '../models/capitalization'
-import { useCapitalizationStore } from '../store/capitalization'
+import Label from '../components/Label.vue'
+import Topic from '../components/Topic.vue'
 
 export default defineComponent({
   name: 'Home',
@@ -131,6 +204,8 @@ export default defineComponent({
     ResultPercentage,
     ResultCashflow,
     ResultPrice,
+    Label,
+    Topic,
   },
   setup () {
     const currentTabIndex = ref(0)
@@ -142,30 +217,30 @@ export default defineComponent({
         name: 'เปรียบเทียบ 1',
         rentPerMonth: 6500,
         expensesPerYear: 12000,
-        capitalisationRate: 6.0,
+        capitalisationRate: 5.9,
         installmentPerMonth: 7000,
-        additionalPropertyValue: 0,
-        propertyPrice: 1200000,
-        isActive: false
-      }))
-      dataset.push(new Capitalization({
-        name: 'เปรียบเทียบ 2',
-        rentPerMonth: 7500,
-        expensesPerYear: 13000,
-        capitalisationRate: 6.2,
-        installmentPerMonth: 7000,
-        additionalPropertyValue: 0,
+        additionalPropertyValue: 10000,
         propertyPrice: 1200000,
         isActive: true
       }))
       dataset.push(new Capitalization({
-        name: 'เปรียบเทียบ 3',
-        rentPerMonth: 8500,
-        expensesPerYear: 14000,
-        capitalisationRate: 6.4,
+        name: 'เปรียบเทียบ 2',
+        rentPerMonth: 6500,
+        expensesPerYear: 12000,
+        capitalisationRate: 7.2,
         installmentPerMonth: 7000,
-        additionalPropertyValue: 0,
-        propertyPrice: 1200000,
+        additionalPropertyValue: 20000,
+        propertyPrice: 1500000,
+        isActive: false
+      }))
+      dataset.push(new Capitalization({
+        name: 'เปรียบเทียบ 3',
+        rentPerMonth: 6500,
+        expensesPerYear: 12000,
+        capitalisationRate: 8.5,
+        installmentPerMonth: 7000,
+        additionalPropertyValue: 50000,
+        propertyPrice: 2200000,
         isActive: false
       }))
     }

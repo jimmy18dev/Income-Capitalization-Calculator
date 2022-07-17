@@ -1,15 +1,14 @@
 <template>
   <div
-    class="flex justify-end items-baseline"
+    class="flex items-baseline"
     :class="{
       'text-red-700': price <= 0,
-      'text-purple-700': price > 0 && price <= 2000000,
-      'text-green-600': price > 2000000,
+      'text-purple-800': price > 0 && price <= 2000000,
+      'text-emerald-600': price > 2000000,
     }"
   >
-    <div v-if="prefix" class="mr-2 text-gray-500">{{ prefix }}</div>
-    <div class="font-kanit-regular text-2xl w-36 text-right">{{ toBaht(price) }}</div>
-    <div class="w-9 text-right">บาท</div>
+    <div class="font-kanit-medium flex-1 text-right text-2xl">{{ toBaht(price) }}</div>
+    <div class="w-9 text-right font-kanit-regular">บาท</div>
   </div>
 </template>
 

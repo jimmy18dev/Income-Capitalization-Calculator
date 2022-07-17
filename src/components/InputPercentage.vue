@@ -1,9 +1,8 @@
 <template>
   <div class="flex flex-col">
-    <Label>{{ label }}</Label>
     <div class="flex relative">
       <input
-        class="font-kanit-regular text-right flex-1 px-0 m-0 text-2xl bg-transparent outline-none border-b border-gray-300 pr-9 focus:border-gray-600"
+      class="font-kanit-regular text-2xl leading-none text-right w-full bg-transparent outline-none border-b border-dotted border-gray-200 focus:border-gray-600 pr-9"
         type="tel"
         :placeholder="placeholder"
         :value="value"
@@ -15,9 +14,8 @@
         }"
         @input="$emit('update:value', $event.target.value)"
       >
-      <div class="absolute inset-y-0 right-0 left-auto w-9 flex items-center justify-end">{{ unit }}</div>
+      <div class="absolute inset-y-0 right-0 font-kanit-regular w-8 pl-1 pb-1 flex items-end">{{ unit }}</div>
     </div>
-    <div v-if="note" class="text-xs mt-1 text-gray-500 text-right">{{ note }}</div>
   </div>
 </template>
 

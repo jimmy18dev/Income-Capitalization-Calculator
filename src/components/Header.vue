@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col">
-    <h1 class="text-3xl mb-1">{{ head }}</h1>
-    <p class="text-gray-500">{{ description }}</p>
+  <div class="flex flex-col items-center p-6">
+    <h1 class="text-4xl">{{ head }}</h1>
+    <p class="text-gray-500 mt-3 font-kanit-regular text-lg">{{ description }}</p>
   </div>
 </template>
 

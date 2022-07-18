@@ -13,6 +13,7 @@ export default ({ mode }) => {
           data: {
             title: env.VITE_APP_PAGE_TITLE,
             description: env.VITE_APP_PAGE_DESCRIPTION,
+            rootUrl: env.VITE_APP_ROOT_URL,
           },
         },
       }),

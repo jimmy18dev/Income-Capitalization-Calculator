@@ -9,9 +9,6 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       createHtmlPlugin({
-        minify: true,
-        entry: 'src/main.ts',
-        template: './index.html',
         inject: {
           data: {
             title: 'index',

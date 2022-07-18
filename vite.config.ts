@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
     return {
       name: "html-transform",
       transformIndexHtml(html: string) {
-        return html.replace(/<%(.*?)%>/g, function (match, p1) {
+        return html.replace(/<%\s(.*?)\s%>/g, function (match, p1) {
           return env[p1]
         })
       },

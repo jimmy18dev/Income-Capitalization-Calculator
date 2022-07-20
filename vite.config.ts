@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { createHtmlPlugin } from 'vite-plugin-html'
+import VitePluginHtmlEnv from 'vite-plugin-html-env'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
@@ -8,26 +8,23 @@ export default defineConfig(({ mode }) => {
   //   return {
   //     name: "html-transform",
   //     transformIndexHtml(html: string) {
-  //       const r = html.replace(/<%\s(.*?)\s%>/g, (match, p1) => {
-  //         return env[p1]
-  //       })
-  //       console.log(r)
-  //       return r
+  //       // const r = html.replace(/<%\s(.*?)\s%>/g, (match, p1) => {
+  //       //   return env[p1]
+  //       // })
+  //       // console.log(r)
+  //       // return r
+  //       // const reg = new RegExp(`(${prefix}|<%)\\s+(\\w+)\\s+(${suffix}|\/>)`, 'g')
+  //       // return html.replace(reg, (...arg) => {
+  //       //   const key = arg[2]
+  //       //   return `${map[key]}`
+  //       // })
   //     },
   //   }
   // }
   return {
     plugins: [
       vue(),
-      createHtmlPlugin({
-        // minify: true,
-        inject: {
-          data: {
-            title: 'ทดสอบ',
-            injectScript: `<script src="./inject.js"></script>`,
-          },
-        },
-      }),
+      VitePluginHtmlEnv(),
     ]
   }
 })

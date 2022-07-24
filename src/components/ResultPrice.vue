@@ -19,8 +19,10 @@ import { toBaht } from '../utils/currency'
 export default defineComponent({
   name: 'ResultPrice',
   props: {
-    price: Number,
-    prefix: String,
+    price: {
+      type: Number,
+      default: 0
+    },
   },
   methods: {
     toBaht,

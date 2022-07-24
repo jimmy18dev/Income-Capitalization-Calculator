@@ -19,7 +19,10 @@ import { toBaht } from '../utils/currency'
 export default defineComponent({
   name: 'ResultCashflow',
   props: {
-    cashflow: Number,
+    cashflow: {
+      type: Number,
+      default: 0
+    },
   },
   methods: {
     toBaht,

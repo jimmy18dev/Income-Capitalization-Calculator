@@ -21,7 +21,10 @@ import { toPercentages } from '../utils/currency'
 export default defineComponent({
   name: 'ResultPercentage',
   props: {
-    percentages: Number,
+    percentages: {
+      type: Number,
+      default: 0
+    },
   },
   methods: {
     toPercentages,

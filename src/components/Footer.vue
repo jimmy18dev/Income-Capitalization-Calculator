@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 flex justify-center text-sm font-kanit-regular text-gray-700">
+  <div class="m-5 flex justify-center text-sm text-gray-600">
     <div>เวอร์ชั่น: {{ version }}</div>
     <span class="mx-2">·</span>
     <a href="https://github.com/jimmy18dev/Income-Capitalization-Calculator" target="_blank" rel="noopener noreferrer" class="underline">Github Project</a>

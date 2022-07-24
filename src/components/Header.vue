@@ -1,12 +1,10 @@
 <template>
-  <div class="flex flex-col items-center p-5">
-    <!-- <img width="200" height="200" class="mb-3" src="../assets/images/income-capitalization.gif" alt="Income Capitalization Calculator"> -->
-    <video class="mb-3" width="200" height="200" autoplay loop muted playsinline>
-      <source src="../assets/medies/income.webm" type="video/webm">
-      <source src="../assets/medies/income.mp4" type="video/mp4">
-    </video>
-    <h1 class="text-3xl text-gray-900">{{ head }}</h1>
-    <p class="text-gray-700 mt-3 font-kanit-regular text-lg">{{ description }}</p>
+  <div class="flex flex-col items-start p-5">
+    <div class="flex items-start">
+      <h1 class="text-2xl text-gray-900 flex-1">{{ head }}</h1>
+      <img class="w-24" width="96" height="58" src="../assets/images/cover.jpg" alt="Income Capitalization Calculator" loading="lazy">
+    </div>
+    <p class="text-gray-700 mt-3 text-lg">{{ description }}</p>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-gray-900 font-kanit-regular text-xl">
+  <div class="text-gray-900 text-lg">
     <slot></slot>
   </div>
 </template>

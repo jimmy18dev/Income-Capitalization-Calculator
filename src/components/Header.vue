@@ -5,7 +5,6 @@
       <source src="../assets/medies/income.webm" type="video/webm">
       <source src="../assets/medies/income.mp4" type="video/mp4">
     </video>
-
     <h1 class="text-3xl text-gray-900">{{ head }}</h1>
     <p class="text-gray-700 mt-3 font-kanit-regular text-lg">{{ description }}</p>
   </div>

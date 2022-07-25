@@ -1,12 +1,13 @@
 <template>
-  <div class="flex flex-col items-center p-5">
-    <!-- <img width="200" height="200" class="mb-3" src="../assets/images/income-capitalization.gif" alt="Income Capitalization Calculator"> -->
-    <video class="mb-3" width="200" height="200" autoplay loop muted playsinline>
-      <source src="../assets/medies/income.webm" type="video/webm">
-      <source src="../assets/medies/income.mp4" type="video/mp4">
-    </video>
-    <h1 class="text-3xl text-gray-900">{{ head }}</h1>
-    <p class="text-gray-700 mt-3 font-kanit-regular text-lg">{{ description }}</p>
+  <div class="flex flex-col items-start p-5">
+    <div class="flex items-center">
+      <h1 class="text-2xl text-gray-900 flex-1 mr-5">{{ head }}</h1>
+      <div class="bg-purple-100 rounded-full w-20 h-20 flex justify-center items-center relative">
+        <font-awesome-icon class="text-4xl text-purple-600" :icon="['fas', 'building']" />
+        <font-awesome-icon class="absolute animate-bounce right-0 bottom-0 text-2xl text-yellow-500" :icon="['fas', 'sack-dollar']" />
+      </div>
+    </div>
+    <p class="text-gray-700 mt-3 text-lg">{{ description }}</p>
   </div>
 </template>
 

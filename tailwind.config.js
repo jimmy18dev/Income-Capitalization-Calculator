@@ -8,7 +8,6 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'kanit-regular': 'Kanit-Regular',
       'kanit-medium': 'Kanit-Medium',
       body: 'Sarabun-Regular'
     },

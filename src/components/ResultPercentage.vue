@@ -10,7 +10,7 @@
     <div v-if="percentages >= 1000" class="font-kanit-medium flex-1 text-right text-2xl">+1000</div>
     <div v-else-if="percentages < -100" class="font-kanit-medium flex-1 text-right text-2xl">-100</div>
     <div v-else class="font-kanit-medium flex-1 text-right text-2xl">{{ toPercentages(percentages, true) }}</div>
-    <div class="w-10 text-xl pl-2 font-kanit-regular">%</div>
+    <div class="w-10 text-lg pl-2">%</div>
   </div>
 </template>
 

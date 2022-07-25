@@ -6,9 +6,9 @@
   <div v-if="dataset.length" class="flex flex-col">
     <Section class="hidden">
       <div v-for="(data, index) in dataset" :key="data.id" class="ml-5 flex-1">
-        <div v-if="index === 0" class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-500">เริ่มต้น</div>
-        <button v-else-if="!data.isActive" class="flex justify-center w-full px-6 py-2 bg-purple-50 font-kanit-regular text-lg text-purple-800 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
-        <button v-else class="flex justify-center w-full px-6 py-2 font-kanit-regular text-lg text-gray-400 bg-gray-100 rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
+        <div v-if="index === 0" class="flex justify-center w-full px-6 py-2 font-kanit-medium text-lg text-gray-500">เริ่มต้น</div>
+        <button v-else-if="!data.isActive" class="flex justify-center w-full px-6 py-2 bg-purple-50 font-kanit-medium text-lg text-purple-800 rounded-lg cursor-pointer" @click="data.enable()">เปรียบเทียบ</button>
+        <button v-else class="flex justify-center w-full px-6 py-2 font-kanit-medium text-lg text-gray-400 bg-gray-100 rounded-lg cursor-pointer" @click="data.disable()">ลบออก</button>
       </div>
     </Section>
 

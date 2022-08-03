@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="safe-top safe-left safe-right safe-bottom">
     <router-view />
   </div>
 </template>
